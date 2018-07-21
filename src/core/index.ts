@@ -2,7 +2,7 @@
  * @description entry core
  */
 
-import { IConfig } from '../lib/interface';
+import { IConfig } from 'Lib/interface';
 
 export default class {
     config: IConfig;
