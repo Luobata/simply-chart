@@ -34,18 +34,24 @@ export default class Chart {
     public render(): Chart {
         const marginX: number = this.config.width / (this.data.length - 1);
         const maxY: number = Math.max(...this.data);
-        const rateY: number = this.config.height / maxY;
+        const minY: number = Math.min(...this.data);
+        const rateY: number = this.config.height / (maxY - minY);
         this.reset();
         this.ctx.save();
-        this.ctx.fillStyle = this.config.color;
+        this.axiesChange();
+        this.ctx.strokeStyle = this.config.color;
+        this.ctx.lineWidth = this.config.lineWidth;
         this.ctx.beginPath();
-        this.ctx.moveTo(0, 0);
+        // this.ctx.moveTo(0, 0);
 
         for (let i: number = 0; i < this.data.length; i = i + 1) {
-            this.ctx.lineTo(i * marginX, this.data[i] * rateY);
+            this.ctx.lineTo(
+                i * marginX * this.pixelRatio,
+                (this.data[i] - minY) * rateY * this.pixelRatio,
+            );
         }
 
-        this.ctx.fill();
+        this.ctx.stroke();
         this.ctx.closePath();
         this.ctx.restore();
 
@@ -55,6 +61,7 @@ export default class Chart {
     // 参数默认值
     private defaultValue(): void {
         this.config.color = this.config.color || 'blue';
+        this.config.lineWidth = this.config.lineWidth || 5;
     }
 
     private canvasInit(): void {
@@ -68,5 +75,10 @@ export default class Chart {
 
         this.canvas.style.width = `${this.config.width}px`;
         this.canvas.style.height = `${this.config.height}px`;
+    }
+
+    private axiesChange(): void {
+        this.ctx.scale(1, -1);
+        this.ctx.translate(0, -this.config.height * this.pixelRatio);
     }
 }
