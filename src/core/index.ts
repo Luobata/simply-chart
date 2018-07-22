@@ -4,7 +4,8 @@
 
 import { IConfig } from 'Lib/interface';
 
-export default class {
+export default class Chart {
+    private dom: HTMLElement;
     private config: IConfig;
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
@@ -16,17 +17,21 @@ export default class {
         this.defaultValue();
 
         this.canvasInit();
+
+        this.dom.appendChild(this.canvas);
     }
 
-    public update(data: number[]): void {
+    public update(data: number[]): Chart {
         this.data = data;
+
+        return this;
     }
 
     public reset(): void {
         this.canvas.height = this.canvas.height;
     }
 
-    public render(): void {
+    public render(): Chart {
         const marginX: number = this.config.width / (this.data.length - 1);
         const maxY: number = Math.max(...this.data);
         const rateY: number = this.config.height / maxY;
@@ -36,13 +41,15 @@ export default class {
         this.ctx.beginPath();
         this.ctx.moveTo(0, 0);
 
-        for (let i: nubmer = 0; i < this.data.length; i = i + 1) {
+        for (let i: number = 0; i < this.data.length; i = i + 1) {
             this.ctx.lineTo(i * marginX, this.data[i] * rateY);
         }
 
         this.ctx.fill();
         this.ctx.closePath();
         this.ctx.restore();
+
+        return this;
     }
 
     // 参数默认值
@@ -51,6 +58,7 @@ export default class {
     }
 
     private canvasInit(): void {
+        this.dom = document.querySelector(this.config.dom);
         this.canvas = document.createElement('canvas');
         this.ctx = this.canvas.getContext('2d');
         this.pixelRatio = window.devicePixelRatio;
