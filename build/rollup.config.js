@@ -9,12 +9,12 @@ import typescript from 'rollup-plugin-typescript2';
 
 module.exports = {
     input: 'src/core/index.ts',
-    name: 'simplyChart',
+    name: 'simply-chart',
     sourcemap: true,
     output: {
-        file: 'dist/simplyChart.esm.js',
+        file: 'dist/simply-chart.esm.js',
         format: 'es',
-        name: 'simplyChart',
+        name: 'simply-chart',
         sourcemap: true,
     },
     plugins: [
