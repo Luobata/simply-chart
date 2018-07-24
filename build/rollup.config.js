@@ -7,17 +7,14 @@ import resolve from 'rollup-plugin-node-resolve';
 import path from 'path';
 import typescript from 'rollup-plugin-typescript2';
 
-const root = path.resolve(__dirname, './');
-const port = 10002;
-
 module.exports = {
-    input: 'src/bundle.ts',
-    name: 'bundle',
+    input: 'src/core/index.ts',
+    name: 'simplyChart',
     sourcemap: true,
     output: {
-        file: 'dist/bundle.esm.js',
+        file: 'dist/simplyChart.esm.js',
         format: 'es',
-        name: 'bundle',
+        name: 'simplyChart',
         sourcemap: true,
     },
     plugins: [
@@ -30,7 +27,8 @@ module.exports = {
             presets: [['env', { modules: false }]],
         }),
         alias({
-            ASSETS: path.resolve(__dirname, '../assets'),
+            Lib: path.resolve(__dirname, '../src/lib'),
+            '@': path.resolve(__dirname, '../src'),
         }),
     ],
     // output format - 'amd', 'cjs', 'es6', 'iife', 'umd'

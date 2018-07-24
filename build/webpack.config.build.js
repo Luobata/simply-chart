@@ -19,9 +19,9 @@ var prodWebpackConfig = {
     entry: root + '/src/index.js',
     output: {
         path: assetsRoot,
-        library: 'bundle',
+        library: 'simplyChart',
         libraryTarget: 'umd',
-        filename: 'bundle.js',
+        filename: 'simplyChart.js',
     },
     plugins: [
         new webpack.DefinePlugin({

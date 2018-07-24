@@ -1,4 +1,5 @@
-import Chart from '../src/';
+// import Chart from '../src/';
+import Chart from '../dist/simplyChart';
 
 // document.ready = () => {
 window.onload = () => {
