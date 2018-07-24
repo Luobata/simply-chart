@@ -6,7 +6,7 @@
     "module": "dist/simply-chart.esm.js",
     "scripts": {
         "build": "node build/build.js",
-        "build:esm": "rollup -c build/rollup.config.js",
+        "build:esm": "rollup -c build/rollup.config.js && rm -rf .rpt2_cache",
         "dev:test": "node build/dev-server.js",
         "test": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register test/test.js",
         "tslint": "tslint -c tslint.json -r src/ -p ./tsconfig.json",
