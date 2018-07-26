@@ -11,6 +11,7 @@ export default class Chart {
     private ctx: CanvasRenderingContext2D;
     private pixelRatio: number;
     private data: number[];
+    private margin: number = 2;
 
     constructor(config: IConfig) {
         this.config = config;
@@ -32,13 +33,16 @@ export default class Chart {
     }
 
     public render(): Chart {
-        const marginX: number = this.config.width / (this.data.length - 1);
+        const marginX: number =
+            (this.config.width - this.margin * 2) / (this.data.length - 1);
         const maxY: number = Math.max(...this.data);
         const minY: number = Math.min(...this.data);
-        const rateY: number = this.config.height / (maxY - minY);
+        const rateY: number =
+            (this.config.height - this.margin * 2) / (maxY - minY);
         this.reset();
         this.ctx.save();
         this.axiesChange();
+        this.ctx.lineCap = 'round';
         this.ctx.strokeStyle = this.config.color;
         this.ctx.lineWidth = this.config.lineWidth;
         this.ctx.beginPath();
@@ -83,6 +87,9 @@ export default class Chart {
 
     private axiesChange(): void {
         this.ctx.scale(1, -1);
-        this.ctx.translate(0, -this.config.height * this.pixelRatio);
+        this.ctx.translate(
+            this.margin,
+            -this.config.height * this.pixelRatio + this.margin,
+        );
     }
 }

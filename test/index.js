@@ -8,6 +8,7 @@ window.onload = () => {
         dom: document.getElementById('test'),
         width: 200,
         height: 100,
+        lineWidth: 2,
     });
 
     a.update([1, 2, 3, 2, 1]).render();
