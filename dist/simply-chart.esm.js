@@ -11,6 +11,7 @@ var Chart = function () {
     function Chart(config) {
         _classCallCheck(this, Chart);
 
+        this.margin = 2;
         this.config = config;
         this.defaultValue();
         this.canvasInit();
@@ -31,13 +32,14 @@ var Chart = function () {
     }, {
         key: 'render',
         value: function render() {
-            var marginX = this.config.width / (this.data.length - 1);
+            var marginX = (this.config.width - this.margin * 2) / (this.data.length - 1);
             var maxY = Math.max.apply(Math, _toConsumableArray(this.data));
             var minY = Math.min.apply(Math, _toConsumableArray(this.data));
-            var rateY = this.config.height / (maxY - minY);
+            var rateY = (this.config.height - this.margin * 2) / (maxY - minY);
             this.reset();
             this.ctx.save();
             this.axiesChange();
+            this.ctx.lineCap = 'round';
             this.ctx.strokeStyle = this.config.color;
             this.ctx.lineWidth = this.config.lineWidth;
             this.ctx.beginPath();
@@ -78,7 +80,7 @@ var Chart = function () {
         key: 'axiesChange',
         value: function axiesChange() {
             this.ctx.scale(1, -1);
-            this.ctx.translate(0, -this.config.height * this.pixelRatio);
+            this.ctx.translate(this.margin, -this.config.height * this.pixelRatio + this.margin);
         }
     }]);
 
