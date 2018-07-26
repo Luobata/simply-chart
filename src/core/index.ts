@@ -65,7 +65,11 @@ export default class Chart {
     }
 
     private canvasInit(): void {
-        this.dom = document.querySelector(this.config.dom);
+        if (typeof this.config.dom === 'string') {
+            this.dom = document.querySelector(this.config.dom);
+        } else {
+            this.dom = this.config.dom;
+        }
         this.canvas = document.createElement('canvas');
         this.ctx = this.canvas.getContext('2d');
         this.pixelRatio = window.devicePixelRatio;

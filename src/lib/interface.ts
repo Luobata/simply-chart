@@ -3,7 +3,7 @@
  */
 
 export interface IConfig {
-    dom: string;
+    dom: string | HTMLElement;
     width: number;
     height: number;
     color?: string;
