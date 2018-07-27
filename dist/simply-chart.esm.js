@@ -35,7 +35,7 @@ var Chart = function () {
             var marginX = (this.config.width - this.margin * 2) / (this.data.length - 1);
             var maxY = Math.max.apply(Math, _toConsumableArray(this.data));
             var minY = Math.min.apply(Math, _toConsumableArray(this.data));
-            var rateY = (this.config.height - this.margin * 2) / (maxY - minY);
+            var rateY = maxY !== minY ? (this.config.height - this.margin * 2) / (maxY - minY) : 1;
             this.reset();
             this.ctx.save();
             this.axiesChange();
