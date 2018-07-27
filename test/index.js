@@ -11,6 +11,7 @@ window.onload = () => {
         lineWidth: 2,
     });
 
+    // a.update([0, 0, 0, 0, 0]).render();
     a.update([1, 2, 3, 2, 1]).render();
     setTimeout(() => {
         a.update([4, 2, 1, 2, 1]).render();

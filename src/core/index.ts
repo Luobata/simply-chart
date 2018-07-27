@@ -38,7 +38,9 @@ export default class Chart {
         const maxY: number = Math.max(...this.data);
         const minY: number = Math.min(...this.data);
         const rateY: number =
-            (this.config.height - this.margin * 2) / (maxY - minY);
+            maxY !== minY
+                ? (this.config.height - this.margin * 2) / (maxY - minY)
+                : 1;
         this.reset();
         this.ctx.save();
         this.axiesChange();
