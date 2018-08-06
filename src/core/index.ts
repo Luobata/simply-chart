@@ -2,7 +2,13 @@
  * @description entry core
  */
 
+import Animation from 'canvas-bezier-curve';
 import { IConfig } from 'Lib/interface';
+
+enum enumRenderType {
+    'point',
+    'total',
+}
 
 export default class Chart {
     private dom: HTMLElement;
@@ -12,6 +18,7 @@ export default class Chart {
     private pixelRatio: number;
     private data: number[];
     private margin: number = 2;
+    private renderType: enumRenderType;
 
     constructor(config: IConfig) {
         this.config = config;
@@ -20,6 +27,8 @@ export default class Chart {
         this.canvasInit();
 
         this.dom.appendChild(this.canvas);
+
+        console.log(new Animation(200, 400, 2, '.68,0 ,1, 1').getList(60));
     }
 
     public update(data: number[]): Chart {

@@ -74,5 +74,8 @@
     "bugs": {
         "url": "https://github.com/Luobata/simply-chart/issues"
     },
-    "homepage": "https://github.com/Luobata/simply-chart#readme"
+    "homepage": "https://github.com/Luobata/simply-chart#readme",
+    "dependencies": {
+        "canvas-bezier-curve": "0.0.1"
+    }
 }
