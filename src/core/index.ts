@@ -3,11 +3,12 @@
  */
 
 import Animation from 'canvas-bezier-curve';
-import { IConfig } from 'Lib/interface';
+import { IConfig, IPoint, IPointList } from 'Lib/interface';
 
 enum enumRenderType {
-    'point',
-    'total',
+    none = 'none',
+    point = 'point',
+    total = 'total',
 }
 
 export default class Chart {
@@ -18,7 +19,11 @@ export default class Chart {
     private pixelRatio: number;
     private data: number[];
     private margin: number = 2;
-    private renderType: enumRenderType;
+    // private renderType: enumRenderType = enumRenderType.none;
+    // private renderTime: number = 2; // 动画执行时间 单位s
+
+    private pointList: IPoint[] = [];
+    private renderList: IPointList = { x: [], y: [] };
 
     constructor(config: IConfig) {
         this.config = config;
@@ -28,11 +33,39 @@ export default class Chart {
 
         this.dom.appendChild(this.canvas);
 
-        console.log(new Animation(200, 400, 2, '.68,0 ,1, 1').getList(60));
+        // console.log(new Animation(200, 400, 2, '.68,0 ,1, 1').getList(60));
     }
 
     public update(data: number[]): Chart {
         this.data = data;
+
+        const marginX: number =
+            (this.config.width - this.margin * 2) / (this.data.length - 1);
+        const maxY: number = Math.max(...this.data);
+        const minY: number = Math.min(...this.data);
+        const rateY: number =
+            maxY !== minY
+                ? (this.config.height - this.margin * 2) / (maxY - minY)
+                : 1;
+        const pointList: IPoint[] = [];
+
+        for (let i: number = 0; i < this.data.length; i = i + 1) {
+            const p: IPoint = {
+                x: i * marginX * this.pixelRatio,
+                y: (this.data[i] - minY) * rateY * this.pixelRatio,
+            };
+            pointList.push(p);
+        }
+
+        if (this.config.renderType === enumRenderType.point) {
+            for (let i: number = 1; i < pointList.length; i = i + 1) {
+                this.getList(pointList[i - 1], pointList[i]);
+                // console.log(new Animation(200, 400, 2, '.68,0 ,1, 1').getList(60));
+            }
+            console.log(this.renderList);
+        }
+
+        this.pointList = pointList;
 
         return this;
     }
@@ -42,14 +75,6 @@ export default class Chart {
     }
 
     public render(): Chart {
-        const marginX: number =
-            (this.config.width - this.margin * 2) / (this.data.length - 1);
-        const maxY: number = Math.max(...this.data);
-        const minY: number = Math.min(...this.data);
-        const rateY: number =
-            maxY !== minY
-                ? (this.config.height - this.margin * 2) / (maxY - minY)
-                : 1;
         this.reset();
         this.ctx.save();
         this.axiesChange();
@@ -58,12 +83,10 @@ export default class Chart {
         this.ctx.lineWidth = this.config.lineWidth;
         this.ctx.beginPath();
         // this.ctx.moveTo(0, 0);
-
-        for (let i: number = 0; i < this.data.length; i = i + 1) {
-            this.ctx.lineTo(
-                i * marginX * this.pixelRatio,
-                (this.data[i] - minY) * rateY * this.pixelRatio,
-            );
+        if (this.config.renderType === enumRenderType.none) {
+            for (const p of this.pointList) {
+                this.ctx.lineTo(p.x, p.y);
+            }
         }
 
         this.ctx.stroke();
@@ -73,10 +96,27 @@ export default class Chart {
         return this;
     }
 
+    private getList(p1: IPoint, p2: IPoint): void {
+        const time: number = 2;
+        const frame: number = 60;
+        const x: number[] = new Animation(p1.x, p2.x, time, 'liner').getList(
+            frame,
+        );
+        const y: number[] = new Animation(p1.y, p2.y, time, 'liner').getList(
+            frame,
+        );
+
+        this.renderList.x = this.renderList.x.concat(x);
+        this.renderList.y = this.renderList.y.concat(y);
+    }
+
     // 参数默认值
     private defaultValue(): void {
         this.config.color = this.config.color || 'blue';
         this.config.lineWidth = this.config.lineWidth || 5;
+        this.config.renderType = this.config.renderType || enumRenderType.none;
+        this.config.renderTime = this.config.renderTime || 2;
+        this.config.framePerSecond = this.config.framePerSecond || 60;
     }
 
     private canvasInit(): void {
