@@ -23,7 +23,8 @@ export default class Chart {
     // private renderTime: number = 2; // 动画执行时间 单位s
 
     private pointList: IPoint[] = [];
-    private renderList: IPointList = { x: [], y: [] };
+    // private renderList: IPointList = { x: [], y: [] };
+    private renderList: IPoint[] = [];
 
     constructor(config: IConfig) {
         this.config = config;
@@ -60,7 +61,6 @@ export default class Chart {
         if (this.config.renderType === enumRenderType.point) {
             for (let i: number = 1; i < pointList.length; i = i + 1) {
                 this.getList(pointList[i - 1], pointList[i]);
-                // console.log(new Animation(200, 400, 2, '.68,0 ,1, 1').getList(60));
             }
             console.log(this.renderList);
         }
@@ -87,6 +87,8 @@ export default class Chart {
             for (const p of this.pointList) {
                 this.ctx.lineTo(p.x, p.y);
             }
+        } else if (this.config.renderType === enumRenderType.point) {
+            this.frameRender();
         }
 
         this.ctx.stroke();
@@ -94,6 +96,23 @@ export default class Chart {
         this.ctx.restore();
 
         return this;
+    }
+
+    private frameRender(): void {
+        requestAnimationFrame(() => {
+            const p: IPoint = this.renderList.shift();
+            this.ctx.lineCap = 'round';
+            this.ctx.strokeStyle = this.config.color;
+            this.ctx.lineWidth = this.config.lineWidth;
+            // this.ctx.beginPath();
+            this.ctx.lineTo(p.x, p.y);
+            this.ctx.stroke();
+            // this.ctx.closePath();
+            this.ctx.restore();
+            if (this.renderList.length) {
+                this.frameRender();
+            }
+        });
     }
 
     private getList(p1: IPoint, p2: IPoint): void {
@@ -106,8 +125,12 @@ export default class Chart {
             frame,
         );
 
-        this.renderList.x = this.renderList.x.concat(x);
-        this.renderList.y = this.renderList.y.concat(y);
+        for (let i: number = 0; i < x.length; i = i + 1) {
+            this.renderList.push({ x: x[i], y: y[i] });
+        }
+
+        // this.renderList.x = this.renderList.x.concat(x);
+        // this.renderList.y = this.renderList.y.concat(y);
     }
 
     // 参数默认值

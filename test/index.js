@@ -9,7 +9,7 @@ window.onload = () => {
         width: 200,
         height: 100,
         lineWidth: 2,
-        renderType: 'none',
+        renderType: 'total',
     });
 
     // a.update([0, 0, 0, 0, 0]).render();
