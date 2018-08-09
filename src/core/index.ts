@@ -3,12 +3,19 @@
  */
 
 import Animation from 'canvas-bezier-curve';
+import { getLength, getTotal } from 'Lib/help';
 import { IConfig, IPoint, IPointList } from 'Lib/interface';
+import Vector from '@/lib/Vector';
 
 enum enumRenderType {
     none = 'none',
     point = 'point',
     total = 'total',
+}
+
+interface IRenderTotal {
+    lengthList: number[];
+    frameList: number[];
 }
 
 export default class Chart {
@@ -25,6 +32,11 @@ export default class Chart {
     private pointList: IPoint[] = [];
     // private renderList: IPointList = { x: [], y: [] };
     private renderList: IPoint[] = [];
+
+    private renderTotal: IRenderTotal = {
+        lengthList: [],
+        frameList: [],
+    };
 
     constructor(config: IConfig) {
         this.config = config;
@@ -62,7 +74,19 @@ export default class Chart {
             for (let i: number = 1; i < pointList.length; i = i + 1) {
                 this.getList(pointList[i - 1], pointList[i]);
             }
-            console.log(this.renderList);
+        } else if (this.config.renderType === enumRenderType.total) {
+            // 把所有的一起list
+            const lengthList: number[] = [];
+            for (let i: number = 1; i < pointList.length; i = i + 1) {
+                lengthList.push(getLength(pointList[i - 1], pointList[i]));
+            }
+            this.renderTotal.lengthList = lengthList;
+            this.renderTotal.frameList = new Animation(
+                0,
+                getTotal(lengthList),
+                this.config.renderTime,
+                'ease-in',
+            ).getList(this.config.framePerSecond);
         }
 
         this.pointList = pointList;
@@ -89,6 +113,8 @@ export default class Chart {
             }
         } else if (this.config.renderType === enumRenderType.point) {
             this.frameRender();
+        } else if (this.config.renderType === enumRenderType.total) {
+            this.totalFrameRender();
         }
 
         this.ctx.stroke();
@@ -96,6 +122,25 @@ export default class Chart {
         this.ctx.restore();
 
         return this;
+    }
+
+    private totalFrameRender(): void {
+        requestAnimationFrame(() => {
+            const len: number = this.renderTotal.frameList.shift();
+            const p: IPoint = this.getPointByFrame(len);
+
+            this.ctx.lineCap = 'round';
+            this.ctx.strokeStyle = this.config.color;
+            this.ctx.lineWidth = this.config.lineWidth;
+            // this.ctx.beginPath();
+            this.ctx.lineTo(p.x, p.y);
+            this.ctx.stroke();
+            // this.ctx.closePath();
+            this.ctx.restore();
+            if (this.renderTotal.frameList.length) {
+                this.totalFrameRender();
+            }
+        });
     }
 
     private frameRender(): void {
@@ -113,6 +158,37 @@ export default class Chart {
                 this.frameRender();
             }
         });
+    }
+
+    private getPointByFrame(len: number): IPoint {
+        let index!: number;
+        let last: number = 0;
+
+        // 找到对应的片段 比如 找到 index 0 那这个点就在 Point 0 1 之间
+        for (
+            let i: number = 0;
+            i < this.renderTotal.lengthList.length;
+            i = i + 1
+        ) {
+            if (len <= this.renderTotal.lengthList[i] + last) {
+                index = i;
+                break;
+            } else {
+                last += this.renderTotal.lengthList[i];
+            }
+        }
+
+        const val: number = this.renderTotal.lengthList[index];
+        const rate: number = (len - last) / val;
+
+        return {
+            x:
+                this.pointList[index].x +
+                (this.pointList[index + 1].x - this.pointList[index].x) * rate,
+            y:
+                this.pointList[index].y +
+                (this.pointList[index + 1].y - this.pointList[index].y) * rate,
+        };
     }
 
     private getList(p1: IPoint, p2: IPoint): void {

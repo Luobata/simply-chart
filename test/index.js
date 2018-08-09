@@ -10,6 +10,7 @@ window.onload = () => {
         height: 100,
         lineWidth: 2,
         renderType: 'total',
+        renderTime: 1,
     });
 
     // a.update([0, 0, 0, 0, 0]).render();
