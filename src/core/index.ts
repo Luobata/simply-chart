@@ -45,8 +45,6 @@ export default class Chart {
         this.canvasInit();
 
         this.dom.appendChild(this.canvas);
-
-        // console.log(new Animation(200, 400, 2, '.68,0 ,1, 1').getList(60));
     }
 
     public update(data: number[]): Chart {
@@ -85,7 +83,7 @@ export default class Chart {
                 0,
                 getTotal(lengthList),
                 this.config.renderTime,
-                'ease-in',
+                'ease-in-out',
             ).getList(this.config.framePerSecond);
         }
 
@@ -111,6 +109,7 @@ export default class Chart {
             for (const p of this.pointList) {
                 this.ctx.lineTo(p.x, p.y);
             }
+            this.ctx.closePath();
         } else if (this.config.renderType === enumRenderType.point) {
             this.frameRender();
         } else if (this.config.renderType === enumRenderType.total) {
@@ -118,7 +117,7 @@ export default class Chart {
         }
 
         this.ctx.stroke();
-        this.ctx.closePath();
+        // this.ctx.closePath();
         this.ctx.restore();
 
         return this;
@@ -127,16 +126,22 @@ export default class Chart {
     private totalFrameRender(): void {
         requestAnimationFrame(() => {
             const len: number = this.renderTotal.frameList.shift();
-            const p: IPoint = this.getPointByFrame(len);
+            const p: IPoint[] = this.getPointByFrame(len);
 
+            this.reset();
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, 0);
             this.ctx.lineCap = 'round';
             this.ctx.strokeStyle = this.config.color;
             this.ctx.lineWidth = this.config.lineWidth;
-            // this.ctx.beginPath();
-            this.ctx.lineTo(p.x, p.y);
+
+            for (const i of p) {
+                this.ctx.lineTo(i.x, i.y);
+            }
+
             this.ctx.stroke();
-            // this.ctx.closePath();
             this.ctx.restore();
+            this.ctx.closePath();
             if (this.renderTotal.frameList.length) {
                 this.totalFrameRender();
             }
@@ -160,7 +165,7 @@ export default class Chart {
         });
     }
 
-    private getPointByFrame(len: number): IPoint {
+    private getPointByFrame(len: number): IPoint[] {
         let index!: number;
         let last: number = 0;
 
@@ -181,14 +186,14 @@ export default class Chart {
         const val: number = this.renderTotal.lengthList[index];
         const rate: number = (len - last) / val;
 
-        return {
+        return this.pointList.slice(0, index + 1).concat({
             x:
                 this.pointList[index].x +
                 (this.pointList[index + 1].x - this.pointList[index].x) * rate,
             y:
                 this.pointList[index].y +
                 (this.pointList[index + 1].y - this.pointList[index].y) * rate,
-        };
+        });
     }
 
     private getList(p1: IPoint, p2: IPoint): void {
