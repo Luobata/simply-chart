@@ -18,6 +18,11 @@ interface IRenderTotal {
     frameList: number[];
 }
 
+interface IRenderPoint {
+    lengthList: number[];
+    frameList: number[];
+}
+
 export default class Chart {
     private dom: HTMLElement;
     private config: IConfig;
@@ -29,6 +34,11 @@ export default class Chart {
 
     private pointList: IPoint[] = [];
     private renderList: IPoint[] = [];
+
+    private renderPoint: IRenderPoint = {
+        lengthList: [],
+        frameList: [],
+    };
 
     private renderTotal: IRenderTotal = {
         lengthList: [],
@@ -66,9 +76,23 @@ export default class Chart {
         }
 
         if (this.config.renderType === enumRenderType.point) {
+            const lengthList: number[] = [];
+            let frameList: number[] = [];
+            let last: number = 0;
             for (let i: number = 1; i < pointList.length; i = i + 1) {
-                this.getList(pointList[i - 1], pointList[i]);
+                lengthList.push(getLength(pointList[i - 1], pointList[i]));
+                frameList = frameList.concat(
+                    new Animation(
+                        last,
+                        lengthList[i - 1] + last,
+                        this.config.renderTime / pointList.length,
+                        'ease-in-out',
+                    ).getList(this.config.framePerSecond),
+                );
+                last += lengthList[i - 1];
             }
+            this.renderPoint.lengthList = lengthList;
+            this.renderPoint.frameList = frameList;
         } else if (this.config.renderType === enumRenderType.total) {
             // 把所有的一起list
             const lengthList: number[] = [];
@@ -119,10 +143,41 @@ export default class Chart {
         return this;
     }
 
+    private frameRender(): void {
+        requestAnimationFrame(() => {
+            // const p: IPoint = this.renderList.shift();
+            const len: number = this.renderPoint.frameList.shift();
+            const p: IPoint[] = this.getPointByFrame(
+                len,
+                this.renderPoint.lengthList,
+            );
+
+            this.reset();
+            this.ctx.lineCap = 'round';
+            this.ctx.strokeStyle = this.config.color;
+            this.ctx.lineWidth = this.config.lineWidth;
+            this.axiesChange();
+            this.ctx.beginPath();
+
+            for (const i of p) {
+                this.ctx.lineTo(i.x, i.y);
+            }
+            this.ctx.stroke();
+            this.ctx.closePath();
+            this.ctx.restore();
+            if (this.renderPoint.frameList.length) {
+                this.frameRender();
+            }
+        });
+    }
+
     private totalFrameRender(): void {
         requestAnimationFrame(() => {
             const len: number = this.renderTotal.frameList.shift();
-            const p: IPoint[] = this.getPointByFrame(len);
+            const p: IPoint[] = this.getPointByFrame(
+                len,
+                this.renderTotal.lengthList,
+            );
 
             this.reset();
             this.axiesChange();
@@ -145,42 +200,21 @@ export default class Chart {
         });
     }
 
-    private frameRender(): void {
-        requestAnimationFrame(() => {
-            const p: IPoint = this.renderList.shift();
-            this.ctx.lineCap = 'round';
-            this.ctx.strokeStyle = this.config.color;
-            this.ctx.lineWidth = this.config.lineWidth;
-            // this.ctx.beginPath();
-            this.ctx.lineTo(p.x, p.y);
-            this.ctx.stroke();
-            // this.ctx.closePath();
-            this.ctx.restore();
-            if (this.renderList.length) {
-                this.frameRender();
-            }
-        });
-    }
-
-    private getPointByFrame(len: number): IPoint[] {
+    private getPointByFrame(len: number, list: number[]): IPoint[] {
         let index!: number;
         let last: number = 0;
 
         // 找到对应的片段 比如 找到 index 0 那这个点就在 Point 0 1 之间
-        for (
-            let i: number = 0;
-            i < this.renderTotal.lengthList.length;
-            i = i + 1
-        ) {
-            if (len <= this.renderTotal.lengthList[i] + last) {
+        for (let i: number = 0; i < list.length; i = i + 1) {
+            if (len <= list[i] + last) {
                 index = i;
                 break;
             } else {
-                last += this.renderTotal.lengthList[i];
+                last += list[i];
             }
         }
 
-        const val: number = this.renderTotal.lengthList[index];
+        const val: number = list[index];
         const rate: number = (len - last) / val;
 
         return this.pointList.slice(0, index + 1).concat({
@@ -206,9 +240,6 @@ export default class Chart {
         for (let i: number = 0; i < x.length; i = i + 1) {
             this.renderList.push({ x: x[i], y: y[i] });
         }
-
-        // this.renderList.x = this.renderList.x.concat(x);
-        // this.renderList.y = this.renderList.y.concat(y);
     }
 
     // 参数默认值

@@ -9,8 +9,8 @@ window.onload = () => {
         width: 200,
         height: 100,
         lineWidth: 2,
-        renderType: 'total',
-        renderTime: 100 / 60,
+        renderType: 'point',
+        renderTime: 2,
         framePerSecond: 60,
     });
 
