@@ -13,12 +13,7 @@ enum enumRenderType {
     total = 'total',
 }
 
-interface IRenderTotal {
-    lengthList: number[];
-    frameList: number[];
-}
-
-interface IRenderPoint {
+interface IRender {
     lengthList: number[];
     frameList: number[];
 }
@@ -35,12 +30,12 @@ export default class Chart {
     private pointList: IPoint[] = [];
     private renderList: IPoint[] = [];
 
-    private renderPoint: IRenderPoint = {
+    private renderPoint: IRender = {
         lengthList: [],
         frameList: [],
     };
 
-    private renderTotal: IRenderTotal = {
+    private renderTotal: IRender = {
         lengthList: [],
         frameList: [],
     };
@@ -125,15 +120,14 @@ export default class Chart {
         this.ctx.strokeStyle = this.config.color;
         this.ctx.lineWidth = this.config.lineWidth;
         this.ctx.beginPath();
-        // this.ctx.moveTo(0, 0);
         if (this.config.renderType === enumRenderType.none) {
             for (const p of this.pointList) {
                 this.ctx.lineTo(p.x, p.y);
             }
         } else if (this.config.renderType === enumRenderType.point) {
-            this.frameRender();
+            this.frameRender(this.renderPoint);
         } else if (this.config.renderType === enumRenderType.total) {
-            this.totalFrameRender();
+            this.frameRender(this.renderTotal);
         }
 
         this.ctx.stroke();
@@ -143,14 +137,13 @@ export default class Chart {
         return this;
     }
 
-    private frameRender(): void {
+    private frameRender(obj: IRender): void {
         requestAnimationFrame(() => {
-            // const p: IPoint = this.renderList.shift();
-            const len: number = this.renderPoint.frameList.shift();
-            const p: IPoint[] = this.getPointByFrame(
-                len,
-                this.renderPoint.lengthList,
-            );
+            if (!obj.frameList.length) {
+                return;
+            }
+            const len: number = obj.frameList.shift();
+            const p: IPoint[] = this.getPointByFrame(len, obj.lengthList);
 
             this.reset();
             this.ctx.lineCap = 'round';
@@ -165,37 +158,8 @@ export default class Chart {
             this.ctx.stroke();
             this.ctx.closePath();
             this.ctx.restore();
-            if (this.renderPoint.frameList.length) {
-                this.frameRender();
-            }
-        });
-    }
-
-    private totalFrameRender(): void {
-        requestAnimationFrame(() => {
-            const len: number = this.renderTotal.frameList.shift();
-            const p: IPoint[] = this.getPointByFrame(
-                len,
-                this.renderTotal.lengthList,
-            );
-
-            this.reset();
-            this.axiesChange();
-            this.ctx.beginPath();
-            this.ctx.moveTo(0, 0);
-            this.ctx.lineCap = 'round';
-            this.ctx.strokeStyle = this.config.color;
-            this.ctx.lineWidth = this.config.lineWidth;
-
-            for (const i of p) {
-                this.ctx.lineTo(i.x, i.y);
-            }
-
-            this.ctx.stroke();
-            this.ctx.restore();
-            this.ctx.closePath();
-            if (this.renderTotal.frameList.length) {
-                this.totalFrameRender();
+            if (obj.frameList.length) {
+                this.frameRender(obj);
             }
         });
     }

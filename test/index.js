@@ -9,14 +9,14 @@ window.onload = () => {
         width: 200,
         height: 100,
         lineWidth: 2,
-        renderType: 'point',
-        renderTime: 2,
+        renderType: 'total',
+        renderTime: 200 / 60,
         framePerSecond: 60,
     });
 
     // a.update([0, 0, 0, 0, 0]).render();
     a.update([1, 2, 3, 2, 1]).render();
-    // setTimeout(() => {
-    //     a.update([4, 2, 1, 2, 1]).render();
-    // }, 2000);
+    setTimeout(() => {
+        a.update([4, 2, 1, 2, 1]).render();
+    }, 2000);
 };
