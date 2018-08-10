@@ -26,11 +26,8 @@ export default class Chart {
     private pixelRatio: number;
     private data: number[];
     private margin: number = 2;
-    // private renderType: enumRenderType = enumRenderType.none;
-    // private renderTime: number = 2; // 动画执行时间 单位s
 
     private pointList: IPoint[] = [];
-    // private renderList: IPointList = { x: [], y: [] };
     private renderList: IPoint[] = [];
 
     private renderTotal: IRenderTotal = {
@@ -109,7 +106,6 @@ export default class Chart {
             for (const p of this.pointList) {
                 this.ctx.lineTo(p.x, p.y);
             }
-            this.ctx.closePath();
         } else if (this.config.renderType === enumRenderType.point) {
             this.frameRender();
         } else if (this.config.renderType === enumRenderType.total) {
@@ -117,7 +113,7 @@ export default class Chart {
         }
 
         this.ctx.stroke();
-        // this.ctx.closePath();
+        this.ctx.closePath();
         this.ctx.restore();
 
         return this;
@@ -129,6 +125,7 @@ export default class Chart {
             const p: IPoint[] = this.getPointByFrame(len);
 
             this.reset();
+            this.axiesChange();
             this.ctx.beginPath();
             this.ctx.moveTo(0, 0);
             this.ctx.lineCap = 'round';
