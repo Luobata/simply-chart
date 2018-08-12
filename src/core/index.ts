@@ -4,8 +4,7 @@
 
 import Animation from 'canvas-bezier-curve';
 import { getLength, getTotal } from 'Lib/help';
-import { IConfig, IPoint, IPointList } from 'Lib/interface';
-import Vector from '@/lib/Vector';
+import { IConfig, IPoint } from 'Lib/interface';
 
 enum enumRenderType {
     none = 'none',
@@ -28,7 +27,6 @@ export default class Chart {
     private margin: number = 2;
 
     private pointList: IPoint[] = [];
-    private renderList: IPoint[] = [];
 
     private renderPoint: IRender = {
         lengthList: [],
@@ -189,21 +187,6 @@ export default class Chart {
                 this.pointList[index].y +
                 (this.pointList[index + 1].y - this.pointList[index].y) * rate,
         });
-    }
-
-    private getList(p1: IPoint, p2: IPoint): void {
-        const time: number = 2;
-        const frame: number = 60;
-        const x: number[] = new Animation(p1.x, p2.x, time, 'liner').getList(
-            frame,
-        );
-        const y: number[] = new Animation(p1.y, p2.y, time, 'liner').getList(
-            frame,
-        );
-
-        for (let i: number = 0; i < x.length; i = i + 1) {
-            this.renderList.push({ x: x[i], y: y[i] });
-        }
     }
 
     // 参数默认值
