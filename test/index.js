@@ -48,12 +48,28 @@ window.onload = () => {
             renderType: 'total',
         },
     });
+    const f = new Chart.bar({
+        ...basicConifg,
+        base: {
+            dom: document.getElementById('test6'),
+            renderType: 'total',
+        },
+    });
+    const g = new Chart.bar({
+        ...basicConifg,
+        base: {
+            dom: document.getElementById('test7'),
+            renderType: 'total',
+        },
+    });
 
     a.update([1, 2.5, 3, 2.5, 1]).render();
     b.update([4, 2, 1, 2, 1]).render();
     c.update([0, 0, 0, 0, 0]).render();
     d.update([10, 20, 35, 5]).render();
     e.update([10, 20, 35, 5]).render();
+    f.update([0, 0, 0, 0]).render();
+    g.update([8, 8, 8, 8]).render();
     // setTimeout(() => {
     //     a.update([4, 2, 1, 2, 1]).render();
     // }, 2000);

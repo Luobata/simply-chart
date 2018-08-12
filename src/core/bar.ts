@@ -5,6 +5,7 @@
 import Chart from '@/core/chart';
 import { enumRenderType, IConfig } from '@/lib/interface';
 import Animation from 'canvas-bezier-curve';
+import { throwStatement } from '../../node_modules/@types/babel-types';
 
 interface IBarRender {
     frameList: number[][];
@@ -44,7 +45,12 @@ export default class Bar extends Chart {
 
         // tslint:disable prefer-for-of
         for (let i: number = 0; i < this.data.length; i = i + 1) {
-            this.heightList.push((this.data[i] - minY) * rateY);
+            if (rateY === 1 && maxY === 0) {
+                // this.heightList.push((this.config.height - minY) / 2);
+                this.heightList.push(1);
+            } else {
+                this.heightList.push((this.data[i] - minY) * rateY);
+            }
             if (this.config.renderType === enumRenderType.total) {
                 this.renderAttr.frameList.push(
                     new Animation(
