@@ -4,10 +4,19 @@
 
 import Chart from '@/core/chart';
 import { enumRenderType, IConfig } from '@/lib/interface';
+import Animation from 'canvas-bezier-curve';
+
+interface IBarRender {
+    frameList: number[][];
+}
 
 export default class Bar extends Chart {
     private data: number[] = [];
     private heightList: number[] = [];
+
+    private renderAttr: IBarRender = {
+        frameList: [],
+    };
 
     constructor(config: IConfig) {
         super(config);
@@ -36,6 +45,16 @@ export default class Bar extends Chart {
         // tslint:disable prefer-for-of
         for (let i: number = 0; i < this.data.length; i = i + 1) {
             this.heightList.push((this.data[i] - minY) * rateY);
+            if (this.config.renderType === enumRenderType.total) {
+                this.renderAttr.frameList.push(
+                    new Animation(
+                        0,
+                        this.heightList[i],
+                        this.config.renderTime,
+                        this.config.renderCurve,
+                    ).getList(this.config.framePerSecond),
+                );
+            }
         }
         // tslint:enable prefer-for-of
 
@@ -72,5 +91,29 @@ export default class Bar extends Chart {
         this.ctx.restore();
     }
 
-    public renderWidthFrame(): void {}
+    public renderWidthFrame(): void {
+        requestAnimationFrame(() => {
+            this.reset();
+            this.ctx.save();
+            this.axiesChange();
+
+            for (let i: number = 0; i < this.heightList.length; i = i + 1) {
+                this.ctx.beginPath();
+                this.ctx.fillStyle = this.config.colors[i];
+                this.ctx.fillRect(
+                    this.config.barWidth * (i * 2 + 1) * this.pixelRatio,
+                    0,
+                    this.config.barWidth * this.pixelRatio,
+                    this.renderAttr.frameList[i].shift() * this.pixelRatio,
+                );
+                this.ctx.closePath();
+            }
+
+            this.ctx.restore();
+
+            if (this.renderAttr.frameList[0].length) {
+                this.renderWidthFrame();
+            }
+        });
+    }
 }

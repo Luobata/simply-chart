@@ -14,6 +14,7 @@ export class Config {
     public height?: number = 100;
     public renderType?: string = enumRenderType.none;
     public renderTime?: number = 2;
+    public renderCurve?: string = 'ease-in-out';
     public framePerSecond?: number = 60;
 
     // attr line
@@ -49,16 +50,18 @@ export interface IBaseConfig {
     height?: number;
     renderType?: string;
     renderTime?: number;
+    renderCurve?: string;
     framePerSecond?: number;
 }
 
 export interface ILineConfig {
-    color?: string;
     lineWidth?: number;
+    color?: string;
 }
 
 export interface IBarConfig {
     barWidth?: number;
+    colors?: string[];
 }
 
 export interface IPoint {

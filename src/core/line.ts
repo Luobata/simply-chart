@@ -11,6 +11,10 @@ export default class Line extends Chart {
     private data: number[];
 
     private pointList: IPoint[] = [];
+    private renderAttr: IRender = {
+        lengthList: [],
+        frameList: [],
+    };
 
     constructor(config: IConfig) {
         super(config);
@@ -49,7 +53,7 @@ export default class Line extends Chart {
                             last,
                             lengthList[i - 1] + last,
                             this.config.renderTime / pointList.length,
-                            'ease-in-out',
+                            this.config.renderCurve,
                         ).getList(this.config.framePerSecond),
                     );
                     last += lengthList[i - 1];
@@ -60,7 +64,7 @@ export default class Line extends Chart {
                     0,
                     getTotal(lengthList),
                     this.config.renderTime,
-                    'ease-in-out',
+                    this.config.renderCurve,
                 ).getList(this.config.framePerSecond);
             }
             this.renderAttr.lengthList = lengthList;

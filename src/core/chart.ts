@@ -1,7 +1,7 @@
 /**
  * @desc Chart
  */
-import { Config, enumRenderType, IConfig, IRender } from '@/lib/interface';
+import { Config, enumRenderType, IConfig } from '@/lib/interface';
 
 export default class Chart {
     protected dom: HTMLElement;
@@ -11,11 +11,6 @@ export default class Chart {
     protected pixelRatio: number;
     protected margin: number = 2;
     protected config: Config;
-
-    protected renderAttr: IRender = {
-        lengthList: [],
-        frameList: [],
-    };
 
     constructor(config: IConfig) {
         this.config = new Config(config);
