@@ -14,10 +14,6 @@ export default class Line extends Chart {
 
     constructor(config: IConfig) {
         super(config);
-
-        this.animation = this.config.renderType !== enumRenderType.none;
-
-        this.insert();
     }
 
     public update(data: number[]): Chart {

@@ -1,7 +1,7 @@
 /**
  * @desc Chart
  */
-import { Config, IConfig, IRender } from '@/lib/interface';
+import { Config, enumRenderType, IConfig, IRender } from '@/lib/interface';
 
 export default class Chart {
     protected dom: HTMLElement;
@@ -20,6 +20,8 @@ export default class Chart {
     constructor(config: IConfig) {
         this.config = new Config(config);
         this.canvasInit();
+        this.animation = this.config.renderType !== enumRenderType.none;
+        this.insert();
     }
 
     protected insert(): void {
