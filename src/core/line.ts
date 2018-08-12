@@ -1,47 +1,23 @@
 /**
- * @description entry core
+ * @description line chart (折线图)
  */
 
+import Chart from '@/core/chart';
+import { getLength, getTotal } from '@/lib/help';
+import { enumRenderType, IConfig, IPoint, IRender } from '@/lib/interface';
 import Animation from 'canvas-bezier-curve';
-import { getLength, getTotal } from 'Lib/help';
-import { IConfig, IPoint } from 'Lib/interface';
 
-enum enumRenderType {
-    none = 'none',
-    point = 'point',
-    total = 'total',
-}
-
-interface IRender {
-    lengthList: number[];
-    frameList: number[];
-}
-
-export default class Chart {
-    private dom: HTMLElement;
-    private config: IConfig;
-    private canvas: HTMLCanvasElement;
-    private ctx: CanvasRenderingContext2D;
-    private animation: boolean = false;
-    private pixelRatio: number;
+export default class Line extends Chart {
     private data: number[];
-    private margin: number = 2;
 
     private pointList: IPoint[] = [];
 
-    private renderAttr: IRender = {
-        lengthList: [],
-        frameList: [],
-    };
-
     constructor(config: IConfig) {
-        this.config = config;
-        this.defaultValue();
-
-        this.canvasInit();
+        super(config);
 
         this.animation = this.config.renderType !== enumRenderType.none;
-        this.dom.appendChild(this.canvas);
+
+        this.insert();
     }
 
     public update(data: number[]): Chart {
@@ -98,10 +74,6 @@ export default class Chart {
         this.pointList = pointList;
 
         return this;
-    }
-
-    public reset(): void {
-        this.canvas.height = this.canvas.height;
     }
 
     public render(): Chart {
@@ -181,39 +153,5 @@ export default class Chart {
                 this.pointList[index].y +
                 (this.pointList[index + 1].y - this.pointList[index].y) * rate,
         });
-    }
-
-    // 参数默认值
-    private defaultValue(): void {
-        this.config.color = this.config.color || 'blue';
-        this.config.lineWidth = this.config.lineWidth || 5;
-        this.config.renderType = this.config.renderType || enumRenderType.none;
-        this.config.renderTime = this.config.renderTime || 2;
-        this.config.framePerSecond = this.config.framePerSecond || 60;
-    }
-
-    private canvasInit(): void {
-        if (typeof this.config.dom === 'string') {
-            this.dom = document.querySelector(this.config.dom);
-        } else {
-            this.dom = this.config.dom;
-        }
-        this.canvas = document.createElement('canvas');
-        this.ctx = this.canvas.getContext('2d');
-        this.pixelRatio = window.devicePixelRatio;
-
-        this.canvas.width = this.config.width * this.pixelRatio;
-        this.canvas.height = this.config.height * this.pixelRatio;
-
-        this.canvas.style.width = `${this.config.width}px`;
-        this.canvas.style.height = `${this.config.height}px`;
-    }
-
-    private axiesChange(): void {
-        this.ctx.scale(1, -1);
-        this.ctx.translate(
-            this.margin,
-            -this.config.height * this.pixelRatio + this.margin,
-        );
     }
 }

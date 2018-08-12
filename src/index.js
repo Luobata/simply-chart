@@ -1,6 +1,8 @@
 /**
  * @description entry
  */
-import core from '@/core/index';
+import line from '@/core/line';
 
-export default core;
+export default {
+    line,
+};
