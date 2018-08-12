@@ -22,18 +22,14 @@ export default class Chart {
     private config: IConfig;
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
+    private animation: boolean = false;
     private pixelRatio: number;
     private data: number[];
     private margin: number = 2;
 
     private pointList: IPoint[] = [];
 
-    private renderPoint: IRender = {
-        lengthList: [],
-        frameList: [],
-    };
-
-    private renderTotal: IRender = {
+    private renderAttr: IRender = {
         lengthList: [],
         frameList: [],
     };
@@ -44,6 +40,7 @@ export default class Chart {
 
         this.canvasInit();
 
+        this.animation = this.config.renderType !== enumRenderType.none;
         this.dom.appendChild(this.canvas);
     }
 
@@ -59,6 +56,9 @@ export default class Chart {
                 ? (this.config.height - this.margin * 2) / (maxY - minY)
                 : 1;
         const pointList: IPoint[] = [];
+        const lengthList: number[] = [];
+        let frameList: number[] = [];
+        let last: number = 0;
 
         for (let i: number = 0; i < this.data.length; i = i + 1) {
             const p: IPoint = {
@@ -68,37 +68,31 @@ export default class Chart {
             pointList.push(p);
         }
 
-        if (this.config.renderType === enumRenderType.point) {
-            const lengthList: number[] = [];
-            let frameList: number[] = [];
-            let last: number = 0;
+        if (this.animation) {
             for (let i: number = 1; i < pointList.length; i = i + 1) {
                 lengthList.push(getLength(pointList[i - 1], pointList[i]));
-                frameList = frameList.concat(
-                    new Animation(
-                        last,
-                        lengthList[i - 1] + last,
-                        this.config.renderTime / pointList.length,
-                        'ease-in-out',
-                    ).getList(this.config.framePerSecond),
-                );
-                last += lengthList[i - 1];
+                if (this.config.renderType === enumRenderType.point) {
+                    frameList = frameList.concat(
+                        new Animation(
+                            last,
+                            lengthList[i - 1] + last,
+                            this.config.renderTime / pointList.length,
+                            'ease-in-out',
+                        ).getList(this.config.framePerSecond),
+                    );
+                    last += lengthList[i - 1];
+                }
             }
-            this.renderPoint.lengthList = lengthList;
-            this.renderPoint.frameList = frameList;
-        } else if (this.config.renderType === enumRenderType.total) {
-            // 把所有的一起list
-            const lengthList: number[] = [];
-            for (let i: number = 1; i < pointList.length; i = i + 1) {
-                lengthList.push(getLength(pointList[i - 1], pointList[i]));
+            if (this.config.renderType === enumRenderType.total) {
+                frameList = new Animation(
+                    0,
+                    getTotal(lengthList),
+                    this.config.renderTime,
+                    'ease-in-out',
+                ).getList(this.config.framePerSecond);
             }
-            this.renderTotal.lengthList = lengthList;
-            this.renderTotal.frameList = new Animation(
-                0,
-                getTotal(lengthList),
-                this.config.renderTime,
-                'ease-in-out',
-            ).getList(this.config.framePerSecond);
+            this.renderAttr.lengthList = lengthList;
+            this.renderAttr.frameList = frameList;
         }
 
         this.pointList = pointList;
@@ -123,9 +117,9 @@ export default class Chart {
                 this.ctx.lineTo(p.x, p.y);
             }
         } else if (this.config.renderType === enumRenderType.point) {
-            this.frameRender(this.renderPoint);
+            this.frameRender(this.renderAttr);
         } else if (this.config.renderType === enumRenderType.total) {
-            this.frameRender(this.renderTotal);
+            this.frameRender(this.renderAttr);
         }
 
         this.ctx.stroke();
