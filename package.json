@@ -1,6 +1,6 @@
 {
     "name": "simply-chart",
-    "version": "0.0.5",
+    "version": "1.0.0",
     "description": "",
     "main": "dist/simply-chart.js",
     "module": "dist/simply-chart.esm.js",

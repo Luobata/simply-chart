@@ -8,7 +8,7 @@ import path from 'path';
 import typescript from 'rollup-plugin-typescript2';
 
 module.exports = {
-    input: 'src/core/index.ts',
+    input: 'src/index.js',
     name: 'simply-chart',
     sourcemap: true,
     output: {
