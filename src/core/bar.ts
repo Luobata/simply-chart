@@ -85,12 +85,18 @@ export default class Bar extends Chart {
         for (let i: number = 0; i < this.heightList.length; i = i + 1) {
             this.ctx.beginPath();
             this.ctx.fillStyle = this.config.colors[i];
-            this.ctx.fillRect(
+            this.renderRadius(
                 this.config.barWidth * (i * 2 + 1) * this.pixelRatio,
                 0,
                 this.config.barWidth * this.pixelRatio,
                 this.heightList[i] * this.pixelRatio,
             );
+            // this.ctx.fillRect(
+            //     this.config.barWidth * (i * 2 + 1) * this.pixelRatio,
+            //     0,
+            //     this.config.barWidth * this.pixelRatio,
+            //     this.heightList[i] * this.pixelRatio,
+            // );
             this.ctx.closePath();
         }
 
@@ -106,12 +112,18 @@ export default class Bar extends Chart {
             for (let i: number = 0; i < this.heightList.length; i = i + 1) {
                 this.ctx.beginPath();
                 this.ctx.fillStyle = this.config.colors[i];
-                this.ctx.fillRect(
+                this.renderRadius(
                     this.config.barWidth * (i * 2 + 1) * this.pixelRatio,
                     0,
                     this.config.barWidth * this.pixelRatio,
                     this.renderAttr.frameList[i].shift() * this.pixelRatio,
                 );
+                // this.ctx.fillRect(
+                //     this.config.barWidth * (i * 2 + 1) * this.pixelRatio,
+                //     0,
+                //     this.config.barWidth * this.pixelRatio,
+                //     this.renderAttr.frameList[i].shift() * this.pixelRatio,
+                // );
                 this.ctx.closePath();
             }
 
@@ -121,5 +133,37 @@ export default class Bar extends Chart {
                 this.renderWidthFrame();
             }
         });
+    }
+
+    private renderRadius(
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+    ): void {
+        const min: number = Math.min(width, height);
+        const radius: number =
+            this.config.barRadius > min / 2 ? min : this.config.barRadius;
+        this.ctx.moveTo(x, y);
+        this.ctx.lineTo(x, y + height - radius);
+        this.ctx.arc(
+            x + radius,
+            y + height - radius,
+            radius,
+            Math.PI * 0,
+            Math.PI * 0.5,
+            true,
+        );
+        this.ctx.lineTo(x + width - radius, y + height);
+        this.ctx.arc(
+            x + width - radius,
+            y + height - radius,
+            radius,
+            Math.PI * 1.5,
+            Math.PI * 2,
+            true,
+        );
+        this.ctx.lineTo(x + width, y);
+        this.ctx.fill();
     }
 }

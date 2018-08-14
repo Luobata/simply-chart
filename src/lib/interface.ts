@@ -23,6 +23,7 @@ export class Config {
 
     // attr bar
     public barWidth?: number; // bar width is computed
+    public barRadius?: number = 5;
     public colors?: string[] = [
         'red',
         'orange',
@@ -61,6 +62,7 @@ export interface ILineConfig {
 
 export interface IBarConfig {
     barWidth?: number;
+    barRadius?: number;
     colors?: string[];
 }
 
