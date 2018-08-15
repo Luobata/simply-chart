@@ -1,6 +1,6 @@
 # simply-chart
 
-The simply-chart is a canvas chart lib without fancy style.It only create the chart with number tendency. It means the number from 0 to 100 and 0 to 1000 will be same in the simply-chart.
+The simply-chart is a canvas chart lib without fancy style.It only create the chart with number tendency. **It means the number from 0 to 100 and 0 to 1000 will be same in the simply-chart.**
 
 ## Installation
 
@@ -42,7 +42,9 @@ chart.update([1, 2.5, 3, 2.5, 1]).render();
 The characteristics of simply-chart is simply, so it only support the simply chart syle now.
 
 -   line
+    ![line](https://ws4.sinaimg.cn/large/006tNbRwly1fuapqjsia1j305p034jra.jpg)
 -   bar
+    ![bar](https://ws3.sinaimg.cn/large/006tNbRwly1fuapq53bvgj305s036wed.jpg)
 
 ## API
 
