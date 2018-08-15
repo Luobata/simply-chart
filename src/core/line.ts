@@ -20,7 +20,7 @@ export default class Line extends Chart {
         super(config);
     }
 
-    public update(data: number[]): Chart {
+    public update(data: number[]): Line {
         this.data = data;
 
         const marginX: number =
@@ -76,7 +76,7 @@ export default class Line extends Chart {
         return this;
     }
 
-    public render(): Chart {
+    public render(): Line {
         this.reset();
         this.ctx.save();
         this.axiesChange();

@@ -5,7 +5,6 @@
 import Chart from '@/core/chart';
 import { enumRenderType, IConfig } from '@/lib/interface';
 import Animation from 'canvas-bezier-curve';
-import { throwStatement } from '../../node_modules/@types/babel-types';
 
 interface IBarRender {
     frameList: number[][];
@@ -77,7 +76,7 @@ export default class Bar extends Chart {
         return this;
     }
 
-    public renderWidthNoFrame(): void {
+    private renderWidthNoFrame(): void {
         this.reset();
         this.ctx.save();
         this.axiesChange();
@@ -103,7 +102,7 @@ export default class Bar extends Chart {
         this.ctx.restore();
     }
 
-    public renderWidthFrame(): void {
+    private renderWidthFrame(): void {
         requestAnimationFrame(() => {
             this.reset();
             this.ctx.save();

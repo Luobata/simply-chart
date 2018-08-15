@@ -4,6 +4,7 @@
     "description": "",
     "main": "dist/simply-chart.js",
     "module": "dist/simply-chart.esm.js",
+    "types": "src/index.d.ts",
     "scripts": {
         "build": "node build/build.js",
         "build:esm": "rollup -c build/rollup.config.js && rm -rf .rpt2_cache",
