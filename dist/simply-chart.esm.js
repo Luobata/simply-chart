@@ -21,6 +21,7 @@ var Config = function Config(config) {
     // attr line
     this.color = 'blue';
     this.lineWidth = 5;
+    this.barRadius = 5;
     this.colors = ['red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'purple']; // 定义其中颜色 如果再多 考虑随机
     Object.assign(this, config.base);
     Object.assign(this, config.attr);
@@ -644,7 +645,13 @@ var Bar = function (_Chart) {
             for (var i = 0; i < this.heightList.length; i = i + 1) {
                 this.ctx.beginPath();
                 this.ctx.fillStyle = this.config.colors[i];
-                this.ctx.fillRect(this.config.barWidth * (i * 2 + 1) * this.pixelRatio, 0, this.config.barWidth * this.pixelRatio, this.heightList[i] * this.pixelRatio);
+                this.renderRadius(this.config.barWidth * (i * 2 + 1) * this.pixelRatio, 0, this.config.barWidth * this.pixelRatio, this.heightList[i] * this.pixelRatio);
+                // this.ctx.fillRect(
+                //     this.config.barWidth * (i * 2 + 1) * this.pixelRatio,
+                //     0,
+                //     this.config.barWidth * this.pixelRatio,
+                //     this.heightList[i] * this.pixelRatio,
+                // );
                 this.ctx.closePath();
             }
             this.ctx.restore();
@@ -661,7 +668,13 @@ var Bar = function (_Chart) {
                 for (var i = 0; i < _this2.heightList.length; i = i + 1) {
                     _this2.ctx.beginPath();
                     _this2.ctx.fillStyle = _this2.config.colors[i];
-                    _this2.ctx.fillRect(_this2.config.barWidth * (i * 2 + 1) * _this2.pixelRatio, 0, _this2.config.barWidth * _this2.pixelRatio, _this2.renderAttr.frameList[i].shift() * _this2.pixelRatio);
+                    _this2.renderRadius(_this2.config.barWidth * (i * 2 + 1) * _this2.pixelRatio, 0, _this2.config.barWidth * _this2.pixelRatio, _this2.renderAttr.frameList[i].shift() * _this2.pixelRatio);
+                    // this.ctx.fillRect(
+                    //     this.config.barWidth * (i * 2 + 1) * this.pixelRatio,
+                    //     0,
+                    //     this.config.barWidth * this.pixelRatio,
+                    //     this.renderAttr.frameList[i].shift() * this.pixelRatio,
+                    // );
                     _this2.ctx.closePath();
                 }
                 _this2.ctx.restore();
@@ -669,6 +682,19 @@ var Bar = function (_Chart) {
                     _this2.renderWidthFrame();
                 }
             });
+        }
+    }, {
+        key: 'renderRadius',
+        value: function renderRadius(x, y, width, height) {
+            var min = Math.min(width, height);
+            var radius = this.config.barRadius > min / 2 ? min : this.config.barRadius;
+            this.ctx.moveTo(x, y);
+            this.ctx.lineTo(x, y + height - radius);
+            this.ctx.arc(x + radius, y + height - radius, radius, Math.PI * 0, Math.PI * 0.5, true);
+            this.ctx.lineTo(x + width - radius, y + height);
+            this.ctx.arc(x + width - radius, y + height - radius, radius, Math.PI * 1.5, Math.PI * 2, true);
+            this.ctx.lineTo(x + width, y);
+            this.ctx.fill();
         }
     }]);
 

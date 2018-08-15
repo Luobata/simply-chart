@@ -1,7 +1,7 @@
 {
     "name": "simply-chart",
-    "version": "1.0.0",
-    "description": "",
+    "version": "1.0.1",
+    "description": "A number tendency Chart lib with canvas",
     "main": "dist/simply-chart.js",
     "module": "dist/simply-chart.esm.js",
     "types": "src/index.d.ts",
