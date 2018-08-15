@@ -61,8 +61,8 @@ The characteristics of simply-chart is simply, so it only support the simply cha
 
     ```js
     interface IConfig {
-    base: BaseConfig;
-    attr: LineConfig;
+        base: BaseConfig;
+        attr: LineConfig;
     }
     ```
 
@@ -81,8 +81,8 @@ The characteristics of simply-chart is simply, so it only support the simply cha
 
     ```Js
     interface IConfig {
-    base: BaseConfig;
-    attr: BarConfig;
+        base: BaseConfig;
+        attr: BarConfig;
     }
     ```
 
