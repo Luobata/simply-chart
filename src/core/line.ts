@@ -20,6 +20,12 @@ export default class Line extends Chart {
         super(config);
     }
 
+    public point(): Line {
+        this.config.point = true;
+
+        return this;
+    }
+
     public update(data: number[]): Line {
         this.data = data;
 
@@ -77,28 +83,35 @@ export default class Line extends Chart {
     }
 
     public render(): Line {
-        this.reset();
-        this.ctx.save();
-        this.axiesChange();
-        this.ctx.lineCap = 'round';
-        this.ctx.strokeStyle = this.config.color;
-        this.ctx.lineWidth = this.config.lineWidth;
-        this.ctx.beginPath();
         if (this.config.renderType === enumRenderType.none) {
-            for (const p of this.pointList) {
-                this.ctx.lineTo(p.x, p.y);
-            }
+            this.renderNoAnimation();
         } else if (this.config.renderType === enumRenderType.point) {
             this.frameRender(this.renderAttr);
         } else if (this.config.renderType === enumRenderType.total) {
             this.frameRender(this.renderAttr);
         }
 
+        return this;
+    }
+
+    private renderNoAnimation(): void {
+        this.reset();
+        this.axiesChange();
+        this.ctx.save();
+        this.ctx.lineCap = 'round';
+        this.ctx.strokeStyle = this.config.color;
+        this.ctx.lineWidth = this.config.lineWidth;
+        this.ctx.beginPath();
+        for (const p of this.pointList) {
+            this.ctx.lineTo(p.x, p.y);
+        }
+
         this.ctx.stroke();
         this.ctx.closePath();
         this.ctx.restore();
-
-        return this;
+        for (const p of this.pointList) {
+            this.renderPoint(p);
+        }
     }
 
     private frameRender(obj: IRender): void {
@@ -110,10 +123,11 @@ export default class Line extends Chart {
             const p: IPoint[] = this.getPointByFrame(len, obj.lengthList);
 
             this.reset();
+            this.axiesChange();
+            this.ctx.save();
             this.ctx.lineCap = 'round';
             this.ctx.strokeStyle = this.config.color;
             this.ctx.lineWidth = this.config.lineWidth;
-            this.axiesChange();
             this.ctx.beginPath();
 
             for (const i of p) {
@@ -122,10 +136,32 @@ export default class Line extends Chart {
             this.ctx.stroke();
             this.ctx.closePath();
             this.ctx.restore();
+            for (const i of p) {
+                this.renderPoint(i);
+            }
             if (obj.frameList.length) {
                 this.frameRender(obj);
             }
         });
+    }
+
+    private renderPoint(p: IPoint): void {
+        if (!this.config.point) {
+            return;
+        }
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.fillStyle = this.config.color;
+        this.ctx.arc(
+            p.x,
+            p.y,
+            this.config.lineWidth * this.pixelRatio,
+            0,
+            Math.PI * 2,
+        );
+        this.ctx.fill();
+        this.ctx.closePath();
+        this.ctx.restore();
     }
 
     private getPointByFrame(len: number, list: number[]): IPoint[] {
