@@ -9,7 +9,7 @@ export default class Chart {
     protected ctx: CanvasRenderingContext2D;
     protected animation: boolean = false;
     protected pixelRatio: number;
-    protected margin: number = 2;
+    protected margin: number = 3;
     protected config: Config;
 
     constructor(config: IConfig) {
@@ -28,6 +28,7 @@ export default class Chart {
     }
 
     protected axiesChange(): void {
+        // 重新处理这段 没有居中
         this.ctx.scale(1, -1);
         this.ctx.translate(
             this.margin,

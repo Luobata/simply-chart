@@ -63,7 +63,9 @@ window.onload = () => {
         },
     });
 
-    a.update([1, 2.5, 3, 2.5, 1]).render();
+    a.update([1, 2.5, 3, 2.5, 1])
+        .point()
+        .render();
     b.update([4, 2, 1, 2, 1]).render();
     c.update([0, 0, 0, 0, 0]).render();
     d.update([10, 20, 35, 5]).render();

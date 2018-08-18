@@ -20,7 +20,7 @@ export class Config {
     // attr line
     public color?: string = 'blue';
     public lineWidth?: number = 5;
-    public point?: boolean = true;
+    public point?: boolean = false;
 
     // attr bar
     public barWidth?: number; // bar width is computed
