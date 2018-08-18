@@ -90,12 +90,6 @@ export default class Bar extends Chart {
                 this.config.barWidth * this.pixelRatio,
                 this.heightList[i] * this.pixelRatio,
             );
-            // this.ctx.fillRect(
-            //     this.config.barWidth * (i * 2 + 1) * this.pixelRatio,
-            //     0,
-            //     this.config.barWidth * this.pixelRatio,
-            //     this.heightList[i] * this.pixelRatio,
-            // );
             this.ctx.closePath();
         }
 
@@ -117,12 +111,6 @@ export default class Bar extends Chart {
                     this.config.barWidth * this.pixelRatio,
                     this.renderAttr.frameList[i].shift() * this.pixelRatio,
                 );
-                // this.ctx.fillRect(
-                //     this.config.barWidth * (i * 2 + 1) * this.pixelRatio,
-                //     0,
-                //     this.config.barWidth * this.pixelRatio,
-                //     this.renderAttr.frameList[i].shift() * this.pixelRatio,
-                // );
                 this.ctx.closePath();
             }
 
@@ -142,7 +130,7 @@ export default class Bar extends Chart {
     ): void {
         const min: number = Math.min(width, height);
         const radius: number =
-            this.config.barRadius > min / 2 ? min : this.config.barRadius;
+            this.config.barRadius > min ? min : this.config.barRadius;
         this.ctx.moveTo(x, y);
         this.ctx.lineTo(x, y + height - radius);
         this.ctx.arc(
