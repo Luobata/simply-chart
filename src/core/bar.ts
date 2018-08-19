@@ -130,7 +130,7 @@ export default class Bar extends Chart {
     ): void {
         const min: number = Math.min(width, height);
         const radius: number =
-            this.config.barRadius > min ? min : this.config.barRadius;
+            this.config.barRadius > min / 2 ? min / 2 : this.config.barRadius;
         this.ctx.moveTo(x, y);
         this.ctx.lineTo(x, y + height - radius);
         this.ctx.arc(
