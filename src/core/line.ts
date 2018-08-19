@@ -149,16 +149,11 @@ export default class Line extends Chart {
         if (!this.config.point) {
             return;
         }
+        const radius: number = this.config.pointRadius * this.pixelRatio;
         this.ctx.save();
         this.ctx.beginPath();
         this.ctx.fillStyle = this.config.color;
-        this.ctx.arc(
-            p.x,
-            p.y,
-            this.config.lineWidth * this.pixelRatio,
-            0,
-            Math.PI * 2,
-        );
+        this.ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
         this.ctx.fill();
         this.ctx.closePath();
         this.ctx.restore();

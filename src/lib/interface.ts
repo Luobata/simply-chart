@@ -21,6 +21,7 @@ export class Config {
     public color?: string = 'blue';
     public lineWidth?: number = 5;
     public point?: boolean = false;
+    public pointRadius?: number = 3;
 
     // attr bar
     public barWidth?: number; // bar width is computed
@@ -57,9 +58,10 @@ export interface IBaseConfig {
 }
 
 export interface ILineConfig {
-    point?: boolean;
     lineWidth?: number;
     color?: string;
+    point?: boolean;
+    pointRadius?: number;
 }
 
 export interface IBarConfig {
