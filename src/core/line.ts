@@ -26,6 +26,12 @@ export default class Line extends Chart {
         return this;
     }
 
+    public fill(): Line {
+        this.config.pointFill = true;
+
+        return this;
+    }
+
     public update(data: number[]): Line {
         this.data = data;
 
@@ -152,9 +158,17 @@ export default class Line extends Chart {
         const radius: number = this.config.pointRadius * this.pixelRatio;
         this.ctx.save();
         this.ctx.beginPath();
-        this.ctx.fillStyle = this.config.color;
         this.ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
-        this.ctx.fill();
+        if (this.config.pointFill) {
+            this.ctx.fillStyle = this.config.color;
+            this.ctx.fill();
+        } else {
+            this.ctx.lineWidth = this.config.lineWidth;
+            this.ctx.strokeStyle = this.config.color;
+            this.ctx.stroke();
+            this.ctx.fillStyle = '#fff';
+            this.ctx.fill();
+        }
         this.ctx.closePath();
         this.ctx.restore();
     }

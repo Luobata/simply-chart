@@ -3,61 +3,70 @@ import Chart from '../src/';
 
 window.onload = () => {
     const basicConifg = {
-        base: {
-            width: 200,
-            height: 100,
-            renderType: 'none',
-            renderTime: 200 / 60,
-            framePerSecond: 60,
-        },
-        attr: {
-            lineWidth: 2,
-        },
+        width: 200,
+        height: 100,
+        renderType: 'none',
+        renderTime: 200 / 60,
+        framePerSecond: 60,
+    };
+    const attrConifg = {
+        lineWidth: 2,
     };
 
     const a = new Chart.line({
-        ...basicConifg,
         base: {
+            ...basicConifg,
             dom: document.getElementById('test'),
             renderType: 'point',
         },
+        attr: {
+            ...attrConifg,
+        },
     });
     const b = new Chart.line({
-        ...basicConifg,
         base: {
+            ...basicConifg,
             dom: document.getElementById('test2'),
             renderType: 'total',
         },
+        attr: {
+            ...attrConifg,
+            point: true,
+            pointFill: true,
+        },
     });
     const c = new Chart.line({
-        ...basicConifg,
         base: {
+            ...basicConifg,
             dom: document.getElementById('test3'),
+        },
+        attr: {
+            ...attrConifg,
         },
     });
     const d = new Chart.bar({
-        ...basicConifg,
         base: {
+            ...basicConifg,
             dom: document.getElementById('test4'),
         },
     });
     const e = new Chart.bar({
-        ...basicConifg,
         base: {
+            ...basicConifg,
             dom: document.getElementById('test5'),
             renderType: 'total',
         },
     });
     const f = new Chart.bar({
-        ...basicConifg,
         base: {
+            ...basicConifg,
             dom: document.getElementById('test6'),
             renderType: 'total',
         },
     });
     const g = new Chart.bar({
-        ...basicConifg,
         base: {
+            ...basicConifg,
             dom: document.getElementById('test7'),
             renderType: 'total',
         },
