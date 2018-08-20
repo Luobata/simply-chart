@@ -78,6 +78,7 @@ window.onload = () => {
         .render();
     b.update([4, 2, 1, 2, 1]).render();
     c.update([0, 0, 0, 0, 0]).render();
+    // c.update([0]).render();
     d.update([10, 20, 35, 5]).render();
     e.update([10, 20, 35, 5]).render();
     f.update([0, 0, 0, 0]).render();

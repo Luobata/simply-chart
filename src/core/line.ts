@@ -34,8 +34,16 @@ export default class Line extends Chart {
 
     public update(data: number[]): Line {
         this.data = data;
+        // 长度为1 默认打开point
+        if (this.data.length === 1) {
+            this.point();
+            this.fill();
+        }
 
-        const marginX: number = this.config.innerWidth / (this.data.length - 1);
+        const marginX: number =
+            this.data.length !== 1
+                ? this.config.innerWidth / (this.data.length - 1)
+                : this.config.innerWidth / 2;
         const maxY: number = Math.max(...this.data);
         const minY: number = Math.min(...this.data);
         const rateY: number =
