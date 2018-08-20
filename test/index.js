@@ -5,6 +5,7 @@ window.onload = () => {
     const basicConifg = {
         width: 200,
         height: 100,
+        padding: 10,
         renderType: 'none',
         renderTime: 200 / 60,
         framePerSecond: 60,

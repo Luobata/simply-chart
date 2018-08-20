@@ -12,6 +12,9 @@ export class Config {
     public dom: HTMLElement;
     public width?: number = 200;
     public height?: number = 100;
+    public innerWidth: number;
+    public innerHeight: number;
+    public padding?: number = 10;
     public renderType?: string = enumRenderType.none;
     public renderTime?: number = 2;
     public renderCurve?: string = 'ease-in-out';
@@ -40,6 +43,8 @@ export class Config {
     constructor(config: IConfig) {
         Object.assign(this, config.base);
         Object.assign(this, config.attr);
+        this.innerWidth = this.width - this.padding * 2;
+        this.innerHeight = this.height - this.padding * 2;
     }
 }
 
@@ -52,6 +57,9 @@ export interface IBaseConfig {
     dom: string | HTMLElement;
     width?: number;
     height?: number;
+    innerWidth?: number;
+    innerHeight?: number;
+    padding?: number;
     renderType?: string;
     renderTime?: number;
     renderCurve?: string;

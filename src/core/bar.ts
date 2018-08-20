@@ -26,8 +26,9 @@ export default class Bar extends Chart {
         this.data = data;
 
         const maxBarWidth: number =
-            (this.config.width - data.length - 1) / data.length;
-        const aveBarWidth: number = this.config.width / (data.length * 2 + 1);
+            (this.config.innerWidth - data.length - 1) / data.length;
+        const aveBarWidth: number =
+            this.config.innerWidth / (data.length * 2 + 1);
         if (this.config.barWidth) {
             if (this.config.barWidth > maxBarWidth) {
                 this.config.barWidth = maxBarWidth;
@@ -38,9 +39,7 @@ export default class Bar extends Chart {
         const maxY: number = Math.max(...this.data);
         const minY: number = 0;
         const rateY: number =
-            maxY !== minY
-                ? (this.config.height - this.margin * 2) / (maxY - minY)
-                : 1;
+            maxY !== minY ? this.config.innerHeight / (maxY - minY) : 1;
 
         // tslint:disable prefer-for-of
         for (let i: number = 0; i < this.data.length; i = i + 1) {

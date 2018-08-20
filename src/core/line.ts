@@ -35,14 +35,11 @@ export default class Line extends Chart {
     public update(data: number[]): Line {
         this.data = data;
 
-        const marginX: number =
-            (this.config.width - this.margin * 2) / (this.data.length - 1);
+        const marginX: number = this.config.innerWidth / (this.data.length - 1);
         const maxY: number = Math.max(...this.data);
         const minY: number = Math.min(...this.data);
         const rateY: number =
-            maxY !== minY
-                ? (this.config.height - this.margin * 2) / (maxY - minY)
-                : 1;
+            maxY !== minY ? this.config.innerHeight / (maxY - minY) : 1;
         const pointList: IPoint[] = [];
         const lengthList: number[] = [];
         let frameList: number[] = [];
