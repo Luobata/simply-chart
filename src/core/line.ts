@@ -6,6 +6,7 @@ import Chart from '@/core/chart';
 import { getLength, getTotal } from '@/lib/help';
 import { enumRenderType, IConfig, IPoint, IRender } from '@/lib/interface';
 import Animation from 'canvas-bezier-curve';
+import catmullRom from 'Lib/geometric/catmull-rom';
 
 export default class Line extends Chart {
     private data: number[];
@@ -113,8 +114,15 @@ export default class Line extends Chart {
         this.ctx.strokeStyle = this.config.color;
         this.ctx.lineWidth = this.config.lineWidth;
         this.ctx.beginPath();
-        for (const p of this.pointList) {
-            this.ctx.lineTo(p.x, p.y);
+        if (this.config.smooth) {
+            const pL: IPoint[] = catmullRom(this.pointList, 100);
+            for (const p of pL) {
+                this.ctx.lineTo(p.x, p.y);
+            }
+        } else {
+            for (const p of this.pointList) {
+                this.ctx.lineTo(p.x, p.y);
+            }
         }
 
         this.ctx.stroke();

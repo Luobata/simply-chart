@@ -18,7 +18,8 @@ window.onload = () => {
         base: {
             ...basicConifg,
             dom: document.getElementById('test'),
-            renderType: 'point',
+            // renderType: 'point',
+            smooth: true,
         },
         attr: {
             ...attrConifg,
@@ -62,7 +63,7 @@ window.onload = () => {
         base: {
             ...basicConifg,
             dom: document.getElementById('test6'),
-            renderType: 'total',
+            // renderType: 'total',
         },
     });
     const g = new Chart.bar({
@@ -81,7 +82,8 @@ window.onload = () => {
     // c.update([0]).render();
     d.update([10, 20, 35, 5]).render();
     e.update([10, 20, 35, 5]).render();
-    f.update([0, 0, 0, 0]).render();
+    // f.update([0, 0, 0, 0]).render();
+    f.update([8]).render();
     g.update([8, 8, 8, 8]).render();
     // setTimeout(() => {
     //     a.update([4, 2, 1, 2, 1]).render();
