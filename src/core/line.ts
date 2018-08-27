@@ -6,6 +6,7 @@ import Chart from '@/core/chart';
 import { getLength, getTotal } from '@/lib/help';
 import { enumRenderType, IConfig, IPoint, IRender } from '@/lib/interface';
 import Animation from 'canvas-bezier-curve';
+import bezierSmooth from 'Lib/geometric/bezier-smooth';
 import catmullRom from 'Lib/geometric/catmull-rom';
 
 export default class Line extends Chart {
@@ -150,9 +151,23 @@ export default class Line extends Chart {
             this.ctx.beginPath();
 
             if (this.config.smooth) {
-                const pL: IPoint[] = catmullRom(p, 100);
-                for (const pi of pL) {
-                    this.ctx.lineTo(pi.x, pi.y);
+                // catmull-rom geomatric is smooth but becauese the chage of the last point
+                // the line will change with time
+                // const pL: IPoint[] = catmullRom(p, 100);
+                // for (const pi of pL) {
+                //     this.ctx.lineTo(pi.x, pi.y);
+                // }
+                const pL: IPoint[][] = bezierSmooth(p);
+                this.ctx.moveTo(p[0].x, p[0].y);
+                for (const i of pL) {
+                    this.ctx.bezierCurveTo(
+                        i[1].x,
+                        i[1].y,
+                        i[2].x,
+                        i[2].y,
+                        i[3].x,
+                        i[3].y,
+                    );
                 }
             } else {
                 for (const i of p) {

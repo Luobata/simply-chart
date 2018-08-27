@@ -1,10 +1,19 @@
 /**
  * @desc Splines, Catmull-Rom algorithm for smooth movement
  * wiki: http://www.dxstudio.com/guide_content.aspx?id=70a2b2cf-193e-4019-859c-28210b1da81f
+ * for get smooth line points
  */
 
 import { IPoint } from '@/lib/interface';
 import Vector from 'Lib/Vector';
+
+export default (path: IPoint[], frame: number): IPoint[] => {
+    return savePathCatmullRom(path, frame).map(
+        (v: Vector): IPoint => {
+            return v.vector;
+        },
+    );
+};
 
 function interpolatedPosition(
     P0: IPoint,
@@ -39,10 +48,8 @@ function interpolatedPosition(
 
 let nodesLeft: number = 0;
 
-function savePathCatmullRom(
-    path: IPoint[], //main function to calculate the Path
-    frame: number,
-): Vector[] {
+// main function to calculate the Path
+function savePathCatmullRom(path: IPoint[], frame: number): Vector[] {
     if (!path) {
         return;
     }
@@ -73,11 +80,3 @@ function savePathCatmullRom(
 
     return outPath;
 }
-
-export default (path: IPoint[], frame: number): IPoint[] => {
-    return savePathCatmullRom(path, frame).map(
-        (v: Vector): IPoint => {
-            return v.vector;
-        },
-    );
-};
