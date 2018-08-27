@@ -18,8 +18,7 @@ window.onload = () => {
         base: {
             ...basicConifg,
             dom: document.getElementById('test'),
-            // renderType: 'point',
-            smooth: true,
+            renderType: 'point',
         },
         attr: {
             ...attrConifg,
@@ -29,6 +28,7 @@ window.onload = () => {
         base: {
             ...basicConifg,
             dom: document.getElementById('test2'),
+            smooth: true,
             renderType: 'total',
         },
         attr: {

@@ -149,8 +149,15 @@ export default class Line extends Chart {
             this.ctx.lineWidth = this.config.lineWidth;
             this.ctx.beginPath();
 
-            for (const i of p) {
-                this.ctx.lineTo(i.x, i.y);
+            if (this.config.smooth) {
+                const pL: IPoint[] = catmullRom(p, 100);
+                for (const pi of pL) {
+                    this.ctx.lineTo(pi.x, pi.y);
+                }
+            } else {
+                for (const i of p) {
+                    this.ctx.lineTo(i.x, i.y);
+                }
             }
             this.ctx.stroke();
             this.ctx.closePath();
