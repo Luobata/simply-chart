@@ -22,6 +22,7 @@ window.onload = () => {
         },
         attr: {
             ...attrConifg,
+            shadowColor: 'yellow',
         },
     });
     const b = new Chart.line({
@@ -30,6 +31,7 @@ window.onload = () => {
             dom: document.getElementById('test2'),
             smooth: true,
             renderType: 'total',
+            shadowColor: 'yellow',
         },
         attr: {
             ...attrConifg,
@@ -73,6 +75,17 @@ window.onload = () => {
             renderType: 'total',
         },
     });
+    const h = new Chart.line({
+        base: {
+            ...basicConifg,
+            dom: document.getElementById('test8'),
+        },
+        attr: {
+            ...attrConifg,
+            shadowColor: 'yellow',
+            point: false,
+        },
+    });
 
     a.update([1, 2.5, 3, 2.5, 1])
         .point()
@@ -85,6 +98,7 @@ window.onload = () => {
     // f.update([0, 0, 0, 0]).render();
     f.update([8]).render();
     g.update([8, 8, 8, 8]).render();
+    h.update([2, 1, 3, 2.5, 1.5]).render();
     // setTimeout(() => {
     //     a.update([4, 2, 1, 2, 1]).render();
     // }, 2000);

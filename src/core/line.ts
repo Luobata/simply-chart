@@ -122,6 +122,7 @@ export default class Line extends Chart {
         this.ctx.strokeStyle = this.config.color;
         this.ctx.lineWidth = this.config.lineWidth;
         this.ctx.beginPath();
+        this.ctx.moveTo(0, 0);
         if (this.config.smooth) {
             const pL: IPoint[] = catmullRom(this.pointList, 100);
             for (const p of pL) {
@@ -131,9 +132,14 @@ export default class Line extends Chart {
             for (const p of this.pointList) {
                 this.ctx.lineTo(p.x, p.y);
             }
+            this.ctx.lineTo(this.pointList[this.pointList.length - 1].x, 0);
         }
 
         this.ctx.stroke();
+        if (this.config.shadowColor) {
+            this.ctx.fillStyle = this.config.shadowColor;
+            this.ctx.fill();
+        }
         this.ctx.closePath();
         this.ctx.restore();
         for (const p of this.pointList) {
@@ -156,6 +162,7 @@ export default class Line extends Chart {
             this.ctx.strokeStyle = this.config.color;
             this.ctx.lineWidth = this.config.lineWidth;
             this.ctx.beginPath();
+            this.ctx.moveTo(0, 0);
 
             if (this.config.smooth) {
                 // catmull-rom geomatric is smooth but becauese the chage of the last point
@@ -165,6 +172,7 @@ export default class Line extends Chart {
                     for (const pi of pL) {
                         this.ctx.lineTo(pi.x, pi.y);
                     }
+                    this.ctx.lineTo(pL[pL.length - 1].x, 0);
                 } else if (this.smoothType === smoothType.bezierSmooth) {
                     const pL: IPoint[][] = bezierSmooth(p);
                     this.ctx.moveTo(p[0].x, p[0].y);
@@ -183,8 +191,13 @@ export default class Line extends Chart {
                 for (const i of p) {
                     this.ctx.lineTo(i.x, i.y);
                 }
+                this.ctx.lineTo(p[p.length - 1].x, 0);
             }
             this.ctx.stroke();
+            if (this.config.shadowColor) {
+                this.ctx.fillStyle = this.config.shadowColor;
+                this.ctx.fill();
+            }
             this.ctx.closePath();
             this.ctx.restore();
             for (const i of p) {
