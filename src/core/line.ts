@@ -9,6 +9,11 @@ import Animation from 'canvas-bezier-curve';
 import bezierSmooth from 'Lib/geometric/bezier-smooth';
 import catmullRom from 'Lib/geometric/catmull-rom';
 
+enum smoothType {
+    catumulRom = 'catumulRom',
+    bezierSmooth = 'bezierSmooth',
+}
+
 export default class Line extends Chart {
     private data: number[];
 
@@ -17,6 +22,8 @@ export default class Line extends Chart {
         lengthList: [],
         frameList: [],
     };
+
+    private smoothType: smoothType = smoothType.catumulRom;
 
     constructor(config: IConfig) {
         super(config);
@@ -153,22 +160,25 @@ export default class Line extends Chart {
             if (this.config.smooth) {
                 // catmull-rom geomatric is smooth but becauese the chage of the last point
                 // the line will change with time
-                const pL: IPoint[] = catmullRom(p, 100);
-                for (const pi of pL) {
-                    this.ctx.lineTo(pi.x, pi.y);
+                if (this.smoothType === smoothType.catumulRom) {
+                    const pL: IPoint[] = catmullRom(p, 100);
+                    for (const pi of pL) {
+                        this.ctx.lineTo(pi.x, pi.y);
+                    }
+                } else if (this.smoothType === smoothType.bezierSmooth) {
+                    const pL: IPoint[][] = bezierSmooth(p);
+                    this.ctx.moveTo(p[0].x, p[0].y);
+                    for (const i of pL) {
+                        this.ctx.bezierCurveTo(
+                            i[1].x,
+                            i[1].y,
+                            i[2].x,
+                            i[2].y,
+                            i[3].x,
+                            i[3].y,
+                        );
+                    }
                 }
-                // const pL: IPoint[][] = bezierSmooth(p);
-                // this.ctx.moveTo(p[0].x, p[0].y);
-                // for (const i of pL) {
-                //     this.ctx.bezierCurveTo(
-                //         i[1].x,
-                //         i[1].y,
-                //         i[2].x,
-                //         i[2].y,
-                //         i[3].x,
-                //         i[3].y,
-                //     );
-                // }
             } else {
                 for (const i of p) {
                     this.ctx.lineTo(i.x, i.y);
