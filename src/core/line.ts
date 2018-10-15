@@ -173,8 +173,8 @@ export default class Line extends Chart {
         }
 
         // render border 与fill区域 区分为了边界没有border
-        this.renderStrike(pList);
         this.renderFill(pList);
+        this.renderStrike(pList);
 
         this.ctx.closePath();
         this.ctx.restore();
@@ -223,8 +223,8 @@ export default class Line extends Chart {
                 pList = p;
             }
 
-            this.renderStrike(pList);
             this.renderFill(pList);
+            this.renderStrike(pList);
 
             this.ctx.closePath();
             this.ctx.restore();
