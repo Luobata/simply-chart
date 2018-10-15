@@ -114,6 +114,31 @@ export default class Line extends Chart {
         return this;
     }
 
+    private renderStrike(pL: IPoint[]): void {
+        this.ctx.beginPath();
+        for (const p of pL) {
+            this.ctx.lineTo(p.x, p.y);
+        }
+
+        this.ctx.stroke();
+        this.ctx.closePath();
+    }
+
+    private renderFill(pL: IPoint[]): void {
+        if (!this.config.shadowColor) {
+            return;
+        }
+        this.ctx.beginPath();
+        this.ctx.fillStyle = this.config.shadowColor;
+        this.ctx.moveTo(0, 0);
+        for (const p of pL) {
+            this.ctx.lineTo(p.x, p.y);
+        }
+        this.ctx.lineTo(pL[pL.length - 1].x, 0);
+        this.ctx.fill();
+        this.ctx.closePath();
+    }
+
     private renderNoAnimation(): void {
         this.reset();
         this.axiesChange();
@@ -122,24 +147,18 @@ export default class Line extends Chart {
         this.ctx.strokeStyle = this.config.color;
         this.ctx.lineWidth = this.config.lineWidth;
         this.ctx.beginPath();
-        this.ctx.moveTo(0, 0);
+        let pList!: IPoint[];
         if (this.config.smooth) {
             const pL: IPoint[] = catmullRom(this.pointList, 100);
-            for (const p of pL) {
-                this.ctx.lineTo(p.x, p.y);
-            }
+            pList = pL;
         } else {
-            for (const p of this.pointList) {
-                this.ctx.lineTo(p.x, p.y);
-            }
-            this.ctx.lineTo(this.pointList[this.pointList.length - 1].x, 0);
+            pList = this.pointList;
         }
 
-        this.ctx.stroke();
-        if (this.config.shadowColor) {
-            this.ctx.fillStyle = this.config.shadowColor;
-            this.ctx.fill();
-        }
+        // render border 与fill区域 区分为了边界没有border
+        this.renderStrike(pList);
+        this.renderFill(pList);
+
         this.ctx.closePath();
         this.ctx.restore();
         for (const p of this.pointList) {
@@ -154,6 +173,7 @@ export default class Line extends Chart {
             }
             const len: number = obj.frameList.shift();
             const p: IPoint[] = this.getPointByFrame(len, obj.lengthList);
+            let pList!: IPoint[];
 
             this.reset();
             this.axiesChange();
@@ -169,10 +189,7 @@ export default class Line extends Chart {
                 // the line will change with time
                 if (this.smoothType === smoothType.catumulRom) {
                     const pL: IPoint[] = catmullRom(p, 100);
-                    for (const pi of pL) {
-                        this.ctx.lineTo(pi.x, pi.y);
-                    }
-                    this.ctx.lineTo(pL[pL.length - 1].x, 0);
+                    pList = pL;
                 } else if (this.smoothType === smoothType.bezierSmooth) {
                     const pL: IPoint[][] = bezierSmooth(p);
                     this.ctx.moveTo(p[0].x, p[0].y);
@@ -186,18 +203,15 @@ export default class Line extends Chart {
                             i[3].y,
                         );
                     }
+                    // pList = pL;
                 }
             } else {
-                for (const i of p) {
-                    this.ctx.lineTo(i.x, i.y);
-                }
-                this.ctx.lineTo(p[p.length - 1].x, 0);
+                pList = p;
             }
-            this.ctx.stroke();
-            if (this.config.shadowColor) {
-                this.ctx.fillStyle = this.config.shadowColor;
-                this.ctx.fill();
-            }
+
+            this.renderStrike(pList);
+            this.renderFill(pList);
+
             this.ctx.closePath();
             this.ctx.restore();
             for (const i of p) {
