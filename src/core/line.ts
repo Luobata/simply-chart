@@ -115,8 +115,28 @@ export default class Line extends Chart {
     }
 
     private renderStrike(pL: IPoint[]): void {
+        this.ctx.lineCap = 'round';
+        this.ctx.lineWidth = this.config.lineWidth;
+
+        if (this.config.shadowColor) {
+            // 补齐三条边
+            const min: number = 0;
+            this.ctx.beginPath();
+            this.ctx.strokeStyle = this.config.shadowColor;
+            this.ctx.moveTo(pL[0].x, pL[0].y);
+            this.ctx.lineTo(0, min);
+            this.ctx.lineTo(pL[pL.length - 1].x, min);
+            this.ctx.lineTo(pL[pL.length - 1].x, pL[pL.length - 1].y);
+            this.ctx.stroke();
+            this.ctx.closePath();
+        }
+
         this.ctx.beginPath();
-        for (const p of pL) {
+        this.ctx.strokeStyle = this.config.color;
+        this.ctx.moveTo(pL[0].x, pL[0].y);
+        for (let i: number = 1; i < pL.length; i = i + 1) {
+            const p: IPoint = pL[i];
+            // for (const p of pL) {
             this.ctx.lineTo(p.x, p.y);
         }
 
@@ -143,9 +163,6 @@ export default class Line extends Chart {
         this.reset();
         this.axiesChange();
         this.ctx.save();
-        this.ctx.lineCap = 'round';
-        this.ctx.strokeStyle = this.config.color;
-        this.ctx.lineWidth = this.config.lineWidth;
         this.ctx.beginPath();
         let pList!: IPoint[];
         if (this.config.smooth) {
@@ -178,9 +195,6 @@ export default class Line extends Chart {
             this.reset();
             this.axiesChange();
             this.ctx.save();
-            this.ctx.lineCap = 'round';
-            this.ctx.strokeStyle = this.config.color;
-            this.ctx.lineWidth = this.config.lineWidth;
             this.ctx.beginPath();
             this.ctx.moveTo(0, 0);
 

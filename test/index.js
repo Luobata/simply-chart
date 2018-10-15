@@ -82,13 +82,24 @@ window.onload = () => {
         },
         attr: {
             ...attrConifg,
+            // shadowColor: 'yellow',
+            point: false,
+        },
+    });
+    const i = new Chart.line({
+        base: {
+            ...basicConifg,
+            dom: document.getElementById('test9'),
+        },
+        attr: {
+            ...attrConifg,
             shadowColor: 'yellow',
             point: false,
         },
     });
 
     a.update([1, 2.5, 3, 2.5, 1])
-        .point()
+        // .point()
         .render();
     b.update([4, 2, 1, 2, 1]).render();
     c.update([0, 0, 0, 0, 0]).render();
@@ -99,6 +110,7 @@ window.onload = () => {
     f.update([8]).render();
     g.update([8, 8, 8, 8]).render();
     h.update([2, 1, 3, 2.5, 1.5]).render();
+    i.update([2, 1, 3, 2.5, 1.5]).render();
     // setTimeout(() => {
     //     a.update([4, 2, 1, 2, 1]).render();
     // }, 2000);
