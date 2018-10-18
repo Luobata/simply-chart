@@ -3,7 +3,7 @@
  */
 
 import Chart from '@/core/chart';
-import { enumRenderType, IConfig } from '@/lib/interface';
+import { enumRenderType, IBarConf, IBarConfig } from '@/lib/interface';
 import Animation from 'canvas-bezier-curve';
 
 interface IBarRender {
@@ -11,6 +11,7 @@ interface IBarRender {
 }
 
 export default class Bar extends Chart {
+    public config: IBarConfig;
     private data: number[] = [];
     private heightList: number[] = [];
 
@@ -18,8 +19,19 @@ export default class Bar extends Chart {
         frameList: [],
     };
 
-    constructor(config: IConfig) {
-        super(config);
+    constructor(config: IBarConf) {
+        super(config, {
+            barRadius: 5,
+            colors: [
+                'red',
+                'orange',
+                'yellow',
+                'green',
+                'cyan',
+                'blue',
+                'purple',
+            ],
+        });
     }
 
     public update(data: number[]): Bar {

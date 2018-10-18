@@ -7,54 +7,7 @@ export enum enumRenderType {
     total = 'total',
 }
 
-export class Config {
-    // basic
-    public dom: HTMLElement;
-    public width?: number = 200;
-    public height?: number = 100;
-    public innerWidth: number;
-    public innerHeight: number;
-    public padding?: number = 10;
-    public renderType?: string = enumRenderType.none;
-    public renderTime?: number = 2;
-    public renderCurve?: string = 'ease-in-out';
-    public framePerSecond?: number = 60;
-
-    // attr line
-    public color?: string = 'blue';
-    public lineWidth?: number = 5;
-    public point?: boolean = false;
-    public pointRadius?: number = 3;
-    public pointFill?: boolean = false;
-    public smooth?: boolean = false;
-    public shadowColor?: string;
-
-    // attr bar
-    public barWidth?: number; // bar width is computed
-    public barRadius?: number = 5;
-    public colors?: string[] = [
-        'red',
-        'orange',
-        'yellow',
-        'green',
-        'cyan',
-        'blue',
-        'purple',
-    ]; // 定义其中颜色 如果再多 考虑随机
-
-    constructor(config: IConfig) {
-        Object.assign(this, config.base);
-        Object.assign(this, config.attr);
-        this.innerWidth = this.width - this.padding * 2;
-        this.innerHeight = this.height - this.padding * 2;
-    }
-}
-
-export interface IConfig {
-    base: IBaseConfig;
-    attr: ILineConfig | IBarConfig;
-}
-
+// basic chart cofnig
 export interface IBaseConfig {
     dom: string | HTMLElement;
     width?: number;
@@ -68,7 +21,8 @@ export interface IBaseConfig {
     framePerSecond?: number;
 }
 
-export interface ILineConfig {
+// line config
+export interface ILine {
     lineWidth?: number;
     color?: string;
     point?: boolean;
@@ -78,11 +32,30 @@ export interface ILineConfig {
     shadowColor?: string;
 }
 
-export interface IBarConfig {
+// line config for input
+export interface ILineConf {
+    base: IBaseConfig;
+    attr: ILine;
+}
+
+// line conifg for module Line
+export type ILineConfig = IBaseConfig & ILine;
+
+// bar config
+export interface IBar {
     barWidth?: number;
     barRadius?: number;
     colors?: string[];
 }
+
+// bar cofnig for input
+export interface IBarConf {
+    base: IBaseConfig;
+    attr: IBar;
+}
+
+// bar config for module Bar
+export type IBarConfig = IBaseConfig & IBar;
 
 export interface IPoint {
     x: number;

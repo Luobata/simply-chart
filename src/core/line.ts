@@ -4,7 +4,13 @@
 
 import Chart from '@/core/chart';
 import { getLength, getTotal } from '@/lib/help';
-import { enumRenderType, IConfig, IPoint, IRender } from '@/lib/interface';
+import {
+    enumRenderType,
+    ILineConf,
+    ILineConfig,
+    IPoint,
+    IRender,
+} from '@/lib/interface';
 import Animation from 'canvas-bezier-curve';
 import bezierSmooth from 'Lib/geometric/bezier-smooth';
 import catmullRom from 'Lib/geometric/catmull-rom';
@@ -15,6 +21,7 @@ enum smoothType {
 }
 
 export default class Line extends Chart {
+    public config: ILineConfig;
     private data: number[];
 
     private pointList: IPoint[] = [];
@@ -25,8 +32,16 @@ export default class Line extends Chart {
 
     private smoothType: smoothType = smoothType.catumulRom;
 
-    constructor(config: IConfig) {
-        super(config);
+    constructor(config: ILineConf) {
+        super(config, {
+            color: 'blue',
+            lineWidth: 5,
+            point: false,
+            pointRadius: 3,
+            pointFill: false,
+            smooth: false,
+            shadowColor: '',
+        });
     }
 
     public point(): Line {

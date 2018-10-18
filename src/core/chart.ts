@@ -1,7 +1,31 @@
 /**
  * @desc Chart
  */
-import { Config, enumRenderType, IConfig } from '@/lib/interface';
+import {
+    enumRenderType,
+    IBar,
+    IBarConf,
+    IBarConfig,
+    IBaseConfig,
+    ILine,
+    ILineConf,
+    ILineConfig,
+} from '@/lib/interface';
+
+type IConfig = ILineConfig | IBarConfig;
+type IConf = ILineConf | IBarConf;
+type IBase = ILine | IBar;
+
+const baseDefault: IBaseConfig = {
+    dom: '',
+    width: 200,
+    height: 100,
+    padding: 10,
+    renderType: enumRenderType.none,
+    renderTime: 2,
+    renderCurve: 'ease-in-out',
+    framePerSecond: 60,
+};
 
 export default class Chart {
     protected dom: HTMLElement;
@@ -9,10 +33,20 @@ export default class Chart {
     protected ctx: CanvasRenderingContext2D;
     protected animation: boolean = false;
     protected pixelRatio: number;
-    protected config: Config;
+    protected config: IConfig;
 
-    constructor(config: IConfig) {
-        this.config = new Config(config);
+    constructor(config: IConf, defaultConf: IBase) {
+        this.config = {
+            ...baseDefault,
+            ...defaultConf,
+            ...config.base,
+            ...config.attr,
+            // ...defaultConf,
+        };
+
+        this.config.innerWidth = this.config.width - this.config.padding * 2;
+        this.config.innerHeight = this.config.height - this.config.padding * 2;
+        // this.config = new Config(config);
         this.canvasInit();
         this.animation = this.config.renderType !== enumRenderType.none;
         this.insert();
