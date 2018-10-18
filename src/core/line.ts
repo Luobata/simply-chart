@@ -120,7 +120,8 @@ export default class Line extends Chart {
 
         if (this.config.shadowColor) {
             // 补齐三条边
-            const min: number = 0;
+            // 最低点取决于线条宽度，如果线条宽度过粗，可能会导致最低点跳出页面
+            const min: number = 1 - this.config.lineWidth;
             this.ctx.beginPath();
             this.ctx.strokeStyle = this.config.shadowColor;
             this.ctx.moveTo(pL[0].x, pL[0].y);
@@ -196,7 +197,6 @@ export default class Line extends Chart {
             this.axiesChange();
             this.ctx.save();
             this.ctx.beginPath();
-            this.ctx.moveTo(0, 0);
 
             if (this.config.smooth) {
                 // catmull-rom geomatric is smooth but becauese the chage of the last point

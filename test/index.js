@@ -93,13 +93,14 @@ window.onload = () => {
         },
         attr: {
             ...attrConifg,
-            shadowColor: 'yellow',
+            smooth: true,
+            shadowColor: '#3B8BF7',
             point: false,
         },
     });
 
     a.update([1, 2.5, 3, 2.5, 1])
-        // .point()
+        .point()
         .render();
     b.update([4, 2, 1, 2, 1]).render();
     c.update([0, 0, 0, 0, 0]).render();
