@@ -11,7 +11,7 @@ import {
     ILineConf,
     ILineConfig,
 } from '@/lib/interface';
-import { hookInstall } from 'Lib/hook';
+import { hookInstall, addDebuggerData } from 'Lib/hook';
 
 type IConfig = ILineConfig | IBarConfig;
 type IConf = ILineConf | IBarConf;
@@ -28,7 +28,11 @@ const baseDefault: IBaseConfig = {
     framePerSecond: 60,
 };
 
+let id: number = 0;
+
 export default class Chart {
+    public id: number;
+
     protected dom: HTMLElement;
     protected canvas: HTMLCanvasElement;
     protected ctx: CanvasRenderingContext2D;
@@ -42,7 +46,6 @@ export default class Chart {
             ...defaultConf,
             ...config.base,
             ...config.attr,
-            // ...defaultConf,
         };
 
         this.config.innerWidth = this.config.width - this.config.padding * 2;
@@ -52,7 +55,10 @@ export default class Chart {
         this.animation = this.config.renderType !== enumRenderType.none;
         this.insert();
 
+        this.id = id;
+        id = id + 1;
         hookInstall();
+        addDebuggerData(this);
     }
 
     protected insert(): void {
