@@ -11,6 +11,7 @@ import {
     ILineConf,
     ILineConfig,
 } from '@/lib/interface';
+import { hookInstall } from 'Lib/hook';
 
 type IConfig = ILineConfig | IBarConfig;
 type IConf = ILineConf | IBarConf;
@@ -50,6 +51,8 @@ export default class Chart {
         this.canvasInit();
         this.animation = this.config.renderType !== enumRenderType.none;
         this.insert();
+
+        hookInstall();
     }
 
     protected insert(): void {
