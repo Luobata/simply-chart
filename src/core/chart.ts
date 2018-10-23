@@ -32,6 +32,7 @@ let id: number = 0;
 
 export default class Chart {
     public id: number;
+    public name: string;
 
     protected dom: HTMLElement;
     protected canvas: HTMLCanvasElement;
@@ -55,8 +56,7 @@ export default class Chart {
         this.animation = this.config.renderType !== enumRenderType.none;
         this.insert();
 
-        this.id = id;
-        id = id + 1;
+        this.getName();
         hookInstall();
         addDebuggerData(this);
     }
@@ -93,5 +93,11 @@ export default class Chart {
 
         this.canvas.style.width = `${this.config.width}px`;
         this.canvas.style.height = `${this.config.height}px`;
+    }
+
+    private getName(): void {
+        this.id = id;
+        id = id + 1;
+        this.name = `${this.constructor.name}_${this.id}`;
     }
 }
