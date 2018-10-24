@@ -10,12 +10,15 @@ import {
     ILine,
     ILineConf,
     ILineConfig,
+    IPie,
+    IPieConf,
+    IPieConfig,
 } from '@/lib/interface';
-import { hookInstall, addDebuggerData } from 'Lib/hook';
+import { addDebuggerData, hookInstall } from 'Lib/hook';
 
-type IConfig = ILineConfig | IBarConfig;
-type IConf = ILineConf | IBarConf;
-type IBase = ILine | IBar;
+type IConfig = ILineConfig | IBarConfig | IPieConfig;
+type IConf = ILineConf | IBarConf | IPieConf;
+type IBase = ILine | IBar | IPie;
 
 const baseDefault: IBaseConfig = {
     dom: '',

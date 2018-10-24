@@ -12,6 +12,7 @@ interface IBarRender {
 
 export default class Bar extends Chart {
     public config: IBarConfig;
+
     private data: number[] = [];
     private heightList: number[] = [];
 

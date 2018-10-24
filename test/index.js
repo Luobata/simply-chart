@@ -98,6 +98,18 @@ window.onload = () => {
             point: false,
         },
     });
+    const j = new Chart.pie({
+        base: {
+            ...basicConifg,
+            dom: document.getElementById('test10'),
+        },
+        // attr: {
+        //     ...attrConifg,
+        //     smooth: true,
+        //     shadowColor: '#3B8BF7',
+        //     point: false,
+        // },
+    });
 
     a.update([1, 2.5, 3, 2.5, 1])
         .point()
@@ -112,6 +124,7 @@ window.onload = () => {
     g.update([8, 8, 8, 8]).render();
     h.update([2, 1, 3, 2.5, 1.5]).render();
     i.update([2, 1, 3, 2.5, 1.5]).render();
+    j.update([2, 1, 3, 2.5, 1.5]).render();
     // setTimeout(() => {
     //     a.update([4, 2, 1, 2, 1]).render();
     // }, 2000);

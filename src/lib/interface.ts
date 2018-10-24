@@ -57,6 +57,17 @@ export interface IBarConf {
 // bar config for module Bar
 export type IBarConfig = IBaseConfig & IBar;
 
+export interface IPie {
+    colors?: string[];
+}
+
+export interface IPieConf {
+    base: IBaseConfig;
+    attr: IPie;
+}
+
+export type IPieConfig = IBaseConfig & IPie;
+
 export interface IPoint {
     x: number;
     y: number;
