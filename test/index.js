@@ -110,6 +110,15 @@ window.onload = () => {
         //     point: false,
         // },
     });
+    const k = new Chart.pie({
+        base: {
+            ...basicConifg,
+            dom: document.getElementById('test11'),
+        },
+        attr: {
+            renderType: 'point',
+        },
+    });
 
     a.update([1, 2.5, 3, 2.5, 1])
         .point()
@@ -125,6 +134,7 @@ window.onload = () => {
     h.update([2, 1, 3, 2.5, 1.5]).render();
     i.update([2, 1, 3, 2.5, 1.5]).render();
     j.update([2, 1, 3, 2.5, 1.5]).render();
+    k.update([2, 1, 3, 2.5, 1.5]).render();
     // setTimeout(() => {
     //     a.update([4, 2, 1, 2, 1]).render();
     // }, 2000);
