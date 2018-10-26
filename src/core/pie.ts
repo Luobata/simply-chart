@@ -85,6 +85,7 @@ export default class Pie extends Chart {
         );
 
         if (items.length) {
+            // enumRenderType.point
             for (let j: number = 0; j < items[0].length; j = j + 1) {
                 const item: IPieData[] = [];
                 for (let i: number = 0; i < items.length; i = i + 1) {
@@ -97,6 +98,32 @@ export default class Pie extends Chart {
             }
         }
 
+        if (this.config.renderType === enumRenderType.total) {
+            const item: number[] = new Animation(
+                0,
+                Math.PI * 2,
+                this.config.renderTime,
+                this.config.renderCurve,
+            ).getList(this.config.framePerSecond);
+            item.map(
+                (v: number): void => {
+                    const t: IPieData[] = [];
+                    for (const i of this.renderData) {
+                        if (i.end <= v) {
+                            t.push(i);
+                        } else {
+                            t.push({
+                                ...i,
+                                end: v,
+                            });
+                            break;
+                        }
+                    }
+                    this.renderFrameData.push(t);
+                },
+            );
+        }
+
         return this;
     }
 
@@ -104,6 +131,8 @@ export default class Pie extends Chart {
         if (this.config.renderType === enumRenderType.none) {
             this.renderWithNoFrame();
         } else if (this.config.renderType === enumRenderType.point) {
+            this.renderWithFrame();
+        } else if (this.config.renderType === enumRenderType.total) {
             this.renderWithFrame();
         }
 
