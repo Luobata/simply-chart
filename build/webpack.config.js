@@ -9,7 +9,7 @@ module.exports = {
     entry: {
         app: [
             'webpack-hot-middleware/client?quiet=true',
-            root + '/test/index.js',
+            root + '/test/test.js',
         ],
     },
 
