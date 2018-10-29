@@ -7,7 +7,7 @@
 import Chart from '@/core/chart';
 
 export const hookName: string = '__DATA_DEBUGGER_DEVTOOLS_GLOBAL_HOOK__';
-export const hook: any = (<any>window)[hookName];
+export const hook: any = window ? (<any>window)[hookName] : '';
 
 let hasInstall: boolean = false;
 let debuggerMode: boolean = true;
@@ -30,7 +30,7 @@ export const hookDispatch: Function = (): void => {
 };
 
 export const setDebuggerData: Function = (): void => {
-    if (debuggerMode) {
+    if (debuggerMode || !window) {
         if ((<any>window).__Canvas_Screen_Data) {
             return;
         }

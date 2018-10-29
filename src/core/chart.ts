@@ -87,7 +87,7 @@ export default class Chart {
         } else {
             this.dom = this.config.dom;
         }
-        this.canvas = document.createElement('canvas');
+        this.canvas = this.config.canvas || document.createElement('canvas');
         this.ctx = this.canvas.getContext('2d');
         this.pixelRatio = window.devicePixelRatio;
 

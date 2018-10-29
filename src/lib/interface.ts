@@ -10,6 +10,7 @@ export enum enumRenderType {
 // basic chart cofnig
 export interface IBaseConfig {
     dom: string | HTMLElement;
+    canvas?: HTMLCanvasElement;
     width?: number;
     height?: number;
     innerWidth?: number;
