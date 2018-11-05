@@ -21,6 +21,7 @@ export default class Pie extends Chart {
     private renderFrameData: IPieData[][] = [];
     private center: IPoint;
     private pieWidth: number;
+    private pieCircularWidth: number = 10;
 
     constructor(config: IPieConf) {
         super(config, {
@@ -33,6 +34,7 @@ export default class Pie extends Chart {
                 'blue',
                 'purple',
             ],
+            fill: false,
         });
     }
 
@@ -47,6 +49,12 @@ export default class Pie extends Chart {
         this.pieWidth =
             Math.min(this.config.width, this.config.height) / 2 -
             this.config.padding;
+
+        // 如果pieCircleWidh比pieWidth小 取其一半
+        this.pieCircularWidth =
+            this.pieWidth < this.pieCircularWidth
+                ? this.pieWidth / 2
+                : this.pieCircularWidth;
         this.data = data;
         const total: number = data.reduce(
             (a: number, b: number): number => a + b,
@@ -166,6 +174,8 @@ export default class Pie extends Chart {
             this.ctx.closePath();
         }
 
+        this.renderFill();
+
         if (fn) {
             fn.call(this);
         }
@@ -180,5 +190,29 @@ export default class Pie extends Chart {
                 );
             }
         });
+    }
+
+    /**
+     * 绘制饼图中心区域
+     */
+    private renderFill(): void {
+        if (!this.config.fill) {
+            return;
+        }
+
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.fillStyle = 'white';
+        this.ctx.arc(
+            this.center.x,
+            this.center.y,
+            this.pieWidth - this.pieCircularWidth,
+            0,
+            Math.PI * 2,
+            false,
+        );
+        this.ctx.fill();
+        this.ctx.closePath();
+        this.ctx.restore();
     }
 }

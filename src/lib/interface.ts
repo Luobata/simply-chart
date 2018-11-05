@@ -59,7 +59,10 @@ export interface IBarConf {
 export type IBarConfig = IBaseConfig & IBar;
 
 export interface IPie {
+    // 颜色
     colors?: string[];
+    // 是否实心 true 实心
+    fill?: boolean;
 }
 
 export interface IPieConf {
