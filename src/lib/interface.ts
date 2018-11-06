@@ -72,6 +72,18 @@ export interface IPieConf {
 
 export type IPieConfig = IBaseConfig & IPie;
 
+export interface IRadius {
+    // 颜色
+    color: string;
+}
+
+export interface IRadiusConf {
+    base: IBaseConfig;
+    attr: IRadius;
+}
+
+export type IRadiusConfig = IBaseConfig & IRadius;
+
 export interface IPoint {
     x: number;
     y: number;
@@ -86,3 +98,7 @@ export interface IRender {
     lengthList: number[];
     frameList: number[];
 }
+
+export type IConfig = ILineConfig | IBarConfig | IPieConfig | IRadiusConfig;
+export type IConf = ILineConf | IBarConf | IPieConf | IRadiusConf;
+export type IBase = ILine | IBar | IPie | IRadius;

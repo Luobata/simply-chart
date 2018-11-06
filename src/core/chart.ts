@@ -3,22 +3,12 @@
  */
 import {
     enumRenderType,
-    IBar,
-    IBarConf,
-    IBarConfig,
+    IBase,
     IBaseConfig,
-    ILine,
-    ILineConf,
-    ILineConfig,
-    IPie,
-    IPieConf,
-    IPieConfig,
+    IConf,
+    IConfig,
 } from '@/lib/interface';
 import { addDebuggerData, hookInstall } from 'Lib/hook';
-
-type IConfig = ILineConfig | IBarConfig | IPieConfig;
-type IConf = ILineConf | IBarConf | IPieConf;
-type IBase = ILine | IBar | IPie;
 
 const baseDefault: IBaseConfig = {
     dom: '',
