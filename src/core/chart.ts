@@ -66,8 +66,8 @@ export default class Chart {
         // 重新处理这段 没有居中
         this.ctx.scale(1, -1);
         this.ctx.translate(
-            this.config.padding,
-            -this.config.height * this.pixelRatio + this.config.padding,
+            this.config.padding * this.pixelRatio,
+            (-this.config.height + this.config.padding) * this.pixelRatio,
         );
     }
 

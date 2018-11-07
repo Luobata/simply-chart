@@ -43,18 +43,19 @@ export default class Pie extends Chart {
         this.renderData = [];
         this.renderFrameData = [];
         this.center = {
-            x: this.config.width / 2 - this.config.padding,
-            y: this.config.height / 2 - this.config.padding,
+            x: (this.config.width / 2 - this.config.padding) * this.pixelRatio,
+            y: (this.config.height / 2 - this.config.padding) * this.pixelRatio,
         };
         this.pieWidth =
-            Math.min(this.config.width, this.config.height) / 2 -
-            this.config.padding;
+            (Math.min(this.config.width, this.config.height) / 2 -
+                this.config.padding) *
+            this.pixelRatio;
 
         // 如果pieCircleWidh比pieWidth小 取其一半
         this.pieCircularWidth =
-            this.pieWidth < this.pieCircularWidth
+            (this.pieWidth < this.pieCircularWidth
                 ? this.pieWidth / 2
-                : this.pieCircularWidth;
+                : this.pieCircularWidth) * this.pixelRatio;
         this.data = data;
         const total: number = data.reduce(
             (a: number, b: number): number => a + b,
