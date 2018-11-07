@@ -175,6 +175,7 @@ export default class Pie extends Chart {
         }
 
         this.renderFill();
+        this.ctx.restore();
 
         if (fn) {
             fn.call(this);
