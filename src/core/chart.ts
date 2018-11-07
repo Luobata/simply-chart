@@ -11,7 +11,7 @@ import {
 import { addDebuggerData, hookInstall } from 'Lib/hook';
 
 const baseDefault: IBaseConfig = {
-    dom: '',
+    // dom: '',
     width: 200,
     height: 100,
     padding: 10,
@@ -72,7 +72,11 @@ export default class Chart {
     }
 
     private canvasInit(): void {
-        if (typeof this.config.dom === 'string') {
+        if (this.config.dom === undefined) {
+            // for test ?
+            this.dom = document.createElement('div');
+            document.body.appendChild(this.dom);
+        } else if (typeof this.config.dom === 'string') {
             this.dom = document.querySelector(this.config.dom);
         } else {
             this.dom = this.config.dom;

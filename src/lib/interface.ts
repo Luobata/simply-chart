@@ -9,7 +9,7 @@ export enum enumRenderType {
 
 // basic chart cofnig
 export interface IBaseConfig {
-    dom: string | HTMLElement;
+    dom?: string | HTMLElement;
     canvas?: HTMLCanvasElement;
     width?: number;
     height?: number;
@@ -75,6 +75,8 @@ export type IPieConfig = IBaseConfig & IPie;
 export interface IRadius {
     // 颜色
     color: string;
+    // 圈颜色
+    pieColor: string;
 }
 
 export interface IRadiusConf {

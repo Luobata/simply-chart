@@ -56,7 +56,6 @@ export default class Pie extends Chart {
             (this.pieWidth < this.pieCircularWidth
                 ? this.pieWidth / 2
                 : this.pieCircularWidth) * this.pixelRatio;
-        this.data = data;
         const total: number = data.reduce(
             (a: number, b: number): number => a + b,
         );

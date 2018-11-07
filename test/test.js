@@ -1,4 +1,5 @@
 import Chart from '../src/';
+import radius from './demo/radius';
 // import Chart from '../dist/simply-chart';
 
 window.onload = () => {
@@ -145,6 +146,8 @@ window.onload = () => {
     j.update([2, 1, 3, 2.5, 1.5]).render();
     k.update([2, 1, 3, 2.5, 1.5]).render();
     l.update([2, 1, 3, 2.5, 1.5]).render();
+
+    radius(Chart);
     // setTimeout(() => {
     //     a.update([4, 2, 1, 2, 1]).render();
     // }, 2000);
