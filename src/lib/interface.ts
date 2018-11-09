@@ -22,6 +22,11 @@ export interface IBaseConfig {
     framePerSecond?: number;
 }
 
+type ChartConf<T> = {
+    base: IBaseConfig;
+    attr: T;
+};
+
 // line config
 export interface ILine {
     lineWidth?: number;
@@ -34,10 +39,7 @@ export interface ILine {
 }
 
 // line config for input
-export interface ILineConf {
-    base: IBaseConfig;
-    attr: ILine;
-}
+export type ILineConf = ChartConf<ILine>;
 
 // line conifg for module Line
 export type ILineConfig = IBaseConfig & ILine;
@@ -50,10 +52,7 @@ export interface IBar {
 }
 
 // bar cofnig for input
-export interface IBarConf {
-    base: IBaseConfig;
-    attr: IBar;
-}
+export type IBarConf = ChartConf<IBar>;
 
 // bar config for module Bar
 export type IBarConfig = IBaseConfig & IBar;
@@ -65,10 +64,7 @@ export interface IPie {
     fill?: boolean;
 }
 
-export interface IPieConf {
-    base: IBaseConfig;
-    attr: IPie;
-}
+export type IPieConf = ChartConf<IPie>;
 
 export type IPieConfig = IBaseConfig & IPie;
 
@@ -79,10 +75,7 @@ export interface IRadius {
     pieColor: string;
 }
 
-export interface IRadiusConf {
-    base: IBaseConfig;
-    attr: IRadius;
-}
+export type IRadiusConf = ChartConf<IRadius>;
 
 export type IRadiusConfig = IBaseConfig & IRadius;
 
