@@ -27,6 +27,8 @@ type ChartConf<T> = {
     attr: T;
 };
 
+type ChartConfig<T> = IBaseConfig & T;
+
 // line config
 export interface ILine {
     lineWidth?: number;
@@ -42,7 +44,7 @@ export interface ILine {
 export type ILineConf = ChartConf<ILine>;
 
 // line conifg for module Line
-export type ILineConfig = IBaseConfig & ILine;
+export type ILineConfig = ChartConfig<ILine>;
 
 // bar config
 export interface IBar {
@@ -55,7 +57,7 @@ export interface IBar {
 export type IBarConf = ChartConf<IBar>;
 
 // bar config for module Bar
-export type IBarConfig = IBaseConfig & IBar;
+export type IBarConfig = ChartConfig<IBar>;
 
 export interface IPie {
     // 颜色
@@ -66,7 +68,7 @@ export interface IPie {
 
 export type IPieConf = ChartConf<IPie>;
 
-export type IPieConfig = IBaseConfig & IPie;
+export type IPieConfig = ChartConfig<IPie>;
 
 export interface IRadius {
     // 颜色
@@ -77,7 +79,7 @@ export interface IRadius {
 
 export type IRadiusConf = ChartConf<IRadius>;
 
-export type IRadiusConfig = IBaseConfig & IRadius;
+export type IRadiusConfig = ChartConfig<IRadius>;
 
 export interface IPoint {
     x: number;
