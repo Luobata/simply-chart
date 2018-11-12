@@ -3,7 +3,7 @@
  */
 
 import Chart from '@/core/chart';
-import { IPieConf, IPieConfig, enumRenderType, IPoint } from '@/lib/interface';
+import { enumRenderType, IPieConf, IPieConfig, IPoint } from '@/lib/interface';
 import Animation from 'canvas-bezier-curve';
 
 interface IPieData {
@@ -13,6 +13,9 @@ interface IPieData {
     y: number;
 }
 
+/**
+ * default class
+ */
 export default class Pie extends Chart {
     public config: IPieConfig;
 

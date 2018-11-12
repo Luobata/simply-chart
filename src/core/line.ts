@@ -20,6 +20,9 @@ enum smoothType {
     bezierSmooth = 'bezierSmooth',
 }
 
+/**
+ * default class
+ */
 export default class Line extends Chart {
     public config: ILineConfig;
     private data: number[];

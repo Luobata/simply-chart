@@ -10,6 +10,9 @@ import {
     IRadiusConfig,
 } from '@/lib/interface';
 
+/**
+ * default class
+ */
 export default class Radius extends Chart {
     public config: IRadiusConfig;
 

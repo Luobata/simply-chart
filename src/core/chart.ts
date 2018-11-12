@@ -23,6 +23,9 @@ const baseDefault: IBaseConfig = {
 
 let id: number = 0;
 
+/**
+ * default class
+ */
 export default class Chart {
     public id: number;
     public name: string;

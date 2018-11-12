@@ -13,6 +13,9 @@
         "tslint": "tslint -c tslint.json -r src/ -p ./tsconfig.json",
         "lint": "eslint --fix src/"
     },
+    "pre-commit": [
+        "tslint"
+    ],
     "devDependencies": {
         "@types/node": "^9.3.0",
         "babel-core": "^6.24.0",
@@ -28,6 +31,7 @@
         "cross-env": "^5.1.6",
         "css-loader": "^0.28.9",
         "eslint": "^4.6.0",
+        "pre-commit": "^1.2.2",
         "eslint-config-airbnb": "^16.1.0",
         "eslint-plugin-import": "^2.8.0",
         "eslint-plugin-jsx-a11y": "^6.0.2",

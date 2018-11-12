@@ -13,10 +13,23 @@ let hasInstall: boolean = false;
 let debuggerMode: boolean = true;
 const debuggerData: Chart[] = [];
 
+export const disableDebug: Function = (): void => {
+    debuggerMode = false;
+};
+
 export const hookInstall: Function = (): void => {
     if (hook && !hasInstall) {
         hook.emit('install');
         hasInstall = true;
+    }
+};
+
+export const setDebuggerData: Function = (): void => {
+    if (debuggerMode || !window) {
+        if ((<any>window).__Canvas_Screen_Data) {
+            return;
+        }
+        (<any>window).__Canvas_Screen_Data = debuggerData;
     }
 };
 
@@ -27,15 +40,6 @@ export const hookDispatch: Function = (): void => {
 
     setDebuggerData();
     hook.emit('refresh');
-};
-
-export const setDebuggerData: Function = (): void => {
-    if (debuggerMode || !window) {
-        if ((<any>window).__Canvas_Screen_Data) {
-            return;
-        }
-        (<any>window).__Canvas_Screen_Data = debuggerData;
-    }
 };
 
 export const addDebuggerData: Function = (obj: Chart): void => {

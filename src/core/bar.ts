@@ -10,6 +10,9 @@ interface IBarRender {
     frameList: number[][];
 }
 
+/**
+ * default class
+ */
 export default class Bar extends Chart {
     public config: IBarConfig;
 
