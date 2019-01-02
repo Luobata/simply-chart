@@ -12,14 +12,23 @@ var enumRenderType;
  * @description hook
  */
 var hookName = '__DATA_DEBUGGER_DEVTOOLS_GLOBAL_HOOK__';
-var hook = window[hookName];
+var hook = window ? window[hookName] : '';
 var hasInstall = false;
 var debuggerMode = true;
 var debuggerData = [];
+
 var hookInstall = function hookInstall() {
     if (hook && !hasInstall) {
         hook.emit('install');
         hasInstall = true;
+    }
+};
+var setDebuggerData = function setDebuggerData() {
+    if (debuggerMode || !window) {
+        if (window.__Canvas_Screen_Data) {
+            return;
+        }
+        window.__Canvas_Screen_Data = debuggerData;
     }
 };
 var hookDispatch = function hookDispatch() {
@@ -28,14 +37,6 @@ var hookDispatch = function hookDispatch() {
     }
     setDebuggerData();
     hook.emit('refresh');
-};
-var setDebuggerData = function setDebuggerData() {
-    if (debuggerMode) {
-        if (window.__Canvas_Screen_Data) {
-            return;
-        }
-        window.__Canvas_Screen_Data = debuggerData;
-    }
 };
 var addDebuggerData = function addDebuggerData(obj) {
     var item = obj;
@@ -58,7 +59,7 @@ function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Co
  * @desc Chart
  */
 var baseDefault = {
-    dom: '',
+    // dom: '',
     width: 200,
     height: 100,
     padding: 10,
@@ -68,6 +69,9 @@ var baseDefault = {
     framePerSecond: 60
 };
 var id = 0;
+/**
+ * default class
+ */
 
 var Chart = function () {
     function Chart(config, defaultConf) {
@@ -101,17 +105,21 @@ var Chart = function () {
         value: function axiesChange() {
             // 重新处理这段 没有居中
             this.ctx.scale(1, -1);
-            this.ctx.translate(this.config.padding, -this.config.height * this.pixelRatio + this.config.padding);
+            this.ctx.translate(this.config.padding * this.pixelRatio, (-this.config.height + this.config.padding) * this.pixelRatio);
         }
     }, {
         key: 'canvasInit',
         value: function canvasInit() {
-            if (typeof this.config.dom === 'string') {
+            if (this.config.dom === undefined) {
+                // for test ?
+                this.dom = document.createElement('div');
+                document.body.appendChild(this.dom);
+            } else if (typeof this.config.dom === 'string') {
                 this.dom = document.querySelector(this.config.dom);
             } else {
                 this.dom = this.config.dom;
             }
-            this.canvas = document.createElement('canvas');
+            this.canvas = this.config.canvas || document.createElement('canvas');
             this.ctx = this.canvas.getContext('2d');
             this.pixelRatio = window.devicePixelRatio;
             this.canvas.width = this.config.width * this.pixelRatio;
@@ -527,6 +535,9 @@ var smoothType;
     smoothType["catumulRom"] = "catumulRom";
     smoothType["bezierSmooth"] = "bezierSmooth";
 })(smoothType || (smoothType = {}));
+/**
+ * default class
+ */
 
 var Line = function (_Chart) {
     _inherits(Line, _Chart);
@@ -879,6 +890,10 @@ function _inherits$1(subClass, superClass) { if (typeof superClass !== "function
 /**
  * @desc bar chart (柱状图)
  */
+/**
+ * default class
+ */
+
 var Bar = function (_Chart) {
     _inherits$1(Bar, _Chart);
 
@@ -1003,6 +1018,10 @@ function _inherits$2(subClass, superClass) { if (typeof superClass !== "function
 /**
  * @desc pie chart (饼图)
  */
+/**
+ * default class
+ */
+
 var Pie = function (_Chart) {
     _inherits$2(Pie, _Chart);
 
@@ -1010,12 +1029,14 @@ var Pie = function (_Chart) {
         _classCallCheck$5(this, Pie);
 
         var _this = _possibleConstructorReturn$2(this, (Pie.__proto__ || Object.getPrototypeOf(Pie)).call(this, config, {
-            colors: ['red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'purple']
+            colors: ['red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'purple'],
+            fill: false
         }));
 
         _this.data = [];
         _this.renderData = [];
         _this.renderFrameData = [];
+        _this.pieCircularWidth = 10;
         return _this;
     }
 
@@ -1028,11 +1049,12 @@ var Pie = function (_Chart) {
             this.renderData = [];
             this.renderFrameData = [];
             this.center = {
-                x: this.config.width / 2 - this.config.padding,
-                y: this.config.height / 2 - this.config.padding
+                x: (this.config.width / 2 - this.config.padding) * this.pixelRatio,
+                y: (this.config.height / 2 - this.config.padding) * this.pixelRatio
             };
-            this.pieWidth = Math.min(this.config.width, this.config.height) / 2 - this.config.padding;
-            this.data = data;
+            this.pieWidth = (Math.min(this.config.width, this.config.height) / 2 - this.config.padding) * this.pixelRatio;
+            // 如果pieCircleWidh比pieWidth小 取其一半
+            this.pieCircularWidth = (this.pieWidth < this.pieCircularWidth ? this.pieWidth / 2 : this.pieCircularWidth) * this.pixelRatio;
             var total = data.reduce(function (a, b) {
                 return a + b;
             });
@@ -1133,6 +1155,8 @@ var Pie = function (_Chart) {
                 this.ctx.fill();
                 this.ctx.closePath();
             }
+            this.renderFill();
+            this.ctx.restore();
             if (fn) {
                 fn.call(this);
             }
@@ -1148,9 +1172,126 @@ var Pie = function (_Chart) {
                 }
             });
         }
+        /**
+         * 绘制饼图中心区域
+         */
+
+    }, {
+        key: 'renderFill',
+        value: function renderFill() {
+            if (!this.config.fill) {
+                return;
+            }
+            this.ctx.save();
+            this.ctx.beginPath();
+            this.ctx.fillStyle = 'white';
+            this.ctx.arc(this.center.x, this.center.y, this.pieWidth - this.pieCircularWidth, 0, Math.PI * 2, false);
+            this.ctx.fill();
+            this.ctx.closePath();
+            this.ctx.restore();
+        }
     }]);
 
     return Pie;
+}(Chart);
+
+var _createClass$6 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck$6(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn$3(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits$3(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * @desc 比例图
+ */
+/**
+ * default class
+ */
+
+var Radius = function (_Chart) {
+    _inherits$3(Radius, _Chart);
+
+    function Radius(config) {
+        _classCallCheck$6(this, Radius);
+
+        var _this = _possibleConstructorReturn$3(this, (Radius.__proto__ || Object.getPrototypeOf(Radius)).call(this, Object.assign({}, config), {
+            color: 'red',
+            pieColor: '#ccc'
+        }));
+
+        _this.ankle = 0;
+        _this.pieCircularWidth = 10;
+        return _this;
+    }
+
+    _createClass$6(Radius, [{
+        key: 'update',
+        value: function update(data) {
+            this.data = data;
+            this.ankle = data / 100 * Math.PI * 2;
+            this.center = {
+                x: (this.config.width / 2 - this.config.padding) * this.pixelRatio,
+                y: (this.config.height / 2 - this.config.padding) * this.pixelRatio
+            };
+            this.pieWidth = (Math.min(this.config.width, this.config.height) / 2 - this.config.padding) * this.pixelRatio;
+            return this;
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            if (this.config.renderType === enumRenderType.none) {
+                this.renderWithNoFrame();
+            }
+            return this;
+        }
+    }, {
+        key: 'renderWithNoFrame',
+        value: function renderWithNoFrame() {
+            this.reset();
+            this.ctx.save();
+            this.axiesChange();
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.center.x, this.center.y);
+            this.ctx.fillStyle = this.config.pieColor;
+            this.ctx.arc(this.center.x, this.center.y, this.pieWidth, 0, Math.PI * 2, false);
+            this.ctx.fill();
+            this.ctx.closePath();
+            this.renderColor();
+            this.renderFill();
+            this.ctx.restore();
+        }
+    }, {
+        key: 'renderColor',
+        value: function renderColor() {
+            this.ctx.save();
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.center.x, this.center.y);
+            this.ctx.fillStyle = this.config.color;
+            this.ctx.arc(this.center.x, this.center.y, this.pieWidth, 0, this.ankle, false);
+            this.ctx.fill();
+            this.ctx.closePath();
+            this.ctx.restore();
+        }
+        /**
+         * 绘制中心区域
+         */
+
+    }, {
+        key: 'renderFill',
+        value: function renderFill() {
+            this.ctx.save();
+            this.ctx.beginPath();
+            this.ctx.fillStyle = 'white';
+            this.ctx.arc(this.center.x, this.center.y, this.pieWidth - this.pieCircularWidth, 0, Math.PI * 2, false);
+            this.ctx.fill();
+            this.ctx.closePath();
+            this.ctx.restore();
+        }
+    }]);
+
+    return Radius;
 }(Chart);
 
 /**
@@ -1159,7 +1300,12 @@ var Pie = function (_Chart) {
 var index = {
     line: Line,
     bar: Bar,
-    pie: Pie
+    pie: Pie,
+    radius: Radius,
+    Line: Line,
+    Bar: Bar,
+    Pie: Pie,
+    Radius: Radius
 };
 
 export default index;

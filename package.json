@@ -1,6 +1,6 @@
 {
     "name": "simply-chart",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "description": "A number tendency Chart lib with canvas",
     "main": "dist/simply-chart.js",
     "module": "dist/simply-chart.esm.js",
@@ -11,7 +11,8 @@
         "dev:test": "node build/dev-server.js",
         "test": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register -r jsdom-global/register test/index.js",
         "tslint": "tslint -c tslint.json -r src/ -p ./tsconfig.json",
-        "lint": "eslint --fix src/"
+        "lint": "eslint --fix src/",
+        "pre-publish": "npm run build && npm run build:esm"
     },
     "pre-commit": [
         "tslint"
