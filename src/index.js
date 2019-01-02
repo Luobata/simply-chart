@@ -11,4 +11,8 @@ export default {
     bar,
     pie,
     radius,
+    Line: line,
+    Bar: bar,
+    Pie: pie,
+    Radius: radius,
 };

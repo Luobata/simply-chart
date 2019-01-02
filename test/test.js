@@ -23,7 +23,7 @@ window.onload = () => {
         },
         attr: {
             ...attrConifg,
-            shadowColor: 'yellow',
+            shadowColor: '#3370F8',
         },
     });
     const b = new Chart.line({
@@ -32,12 +32,13 @@ window.onload = () => {
             dom: document.getElementById('test2'),
             smooth: true,
             renderType: 'total',
-            shadowColor: 'yellow',
         },
         attr: {
             ...attrConifg,
-            point: true,
-            pointFill: true,
+            shadowColor: '#3370F819',
+            shadowColor: '#eaf0fe',
+            // point: true,
+            // pointFill: true,
         },
     });
     const c = new Chart.line({
