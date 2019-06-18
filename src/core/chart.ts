@@ -15,6 +15,7 @@ const baseDefault: IBaseConfig = {
     width: 200,
     height: 100,
     padding: 10,
+    forceFit: false,
     renderType: enumRenderType.none,
     renderTime: 2,
     renderCurve: 'ease-in-out',
@@ -45,16 +46,7 @@ export default class Chart {
             ...config.attr,
         };
 
-        this.config.innerWidth = this.config.width - this.config.padding * 2;
-        this.config.innerHeight = this.config.height - this.config.padding * 2;
-        // this.config = new Config(config);
-        this.canvasInit();
-        this.animation = this.config.renderType !== enumRenderType.none;
-        this.insert();
-
-        this.getName();
-        hookInstall();
-        addDebuggerData(this);
+        this.start();
     }
 
     protected insert(): void {
@@ -74,7 +66,28 @@ export default class Chart {
         );
     }
 
-    private canvasInit(): void {
+    private start(): void {
+        this.domInit();
+        this.boundClinentInit();
+        // this.config = new Config(config);
+        this.canvasInit();
+        this.animation = this.config.renderType !== enumRenderType.none;
+        this.insert();
+
+        this.getName();
+        hookInstall();
+        addDebuggerData(this);
+    }
+
+    private boundClinentInit(): void {
+        if (this.config.forceFit) {
+            this.config.width = this.dom.getBoundingClientRect().width;
+        }
+        this.config.innerWidth = this.config.width - this.config.padding * 2;
+        this.config.innerHeight = this.config.height - this.config.padding * 2;
+    }
+
+    private domInit(): void {
         if (this.config.dom === undefined) {
             // for test ?
             this.dom = document.createElement('div');
@@ -84,6 +97,9 @@ export default class Chart {
         } else {
             this.dom = this.config.dom;
         }
+    }
+
+    private canvasInit(): void {
         this.canvas = this.config.canvas || document.createElement('canvas');
         this.ctx = this.canvas.getContext('2d');
         this.pixelRatio = window.devicePixelRatio;

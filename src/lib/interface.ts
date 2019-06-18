@@ -13,6 +13,7 @@ export interface IBaseConfig {
     canvas?: HTMLCanvasElement;
     width?: number;
     height?: number;
+    forceFit?: boolean;
     innerWidth?: number;
     innerHeight?: number;
     padding?: number;
