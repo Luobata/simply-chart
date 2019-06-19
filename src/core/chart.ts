@@ -1,6 +1,7 @@
 /**
  * @desc Chart
  */
+// import IResize from '@/@types/resize';
 import {
     enumRenderType,
     IBase,
@@ -9,6 +10,10 @@ import {
     IConfig,
 } from '@/lib/interface';
 import { addDebuggerData, hookInstall } from 'Lib/hook';
+
+// import { addResizeListener } from 'Lib/resize.js';
+// tslint:disable-next-line
+const resizeEvent = require('Lib/resize.js');
 
 const baseDefault: IBaseConfig = {
     // dom: '',
@@ -77,6 +82,19 @@ export default class Chart {
         this.getName();
         hookInstall();
         addDebuggerData(this);
+        this.resizeEvent();
+    }
+
+    private resizeEvent(): void {
+        if (this.config.forceFit) {
+            resizeEvent.addResizeListener(
+                this.dom,
+                (): void => {
+                    // TODO re-render
+                    // console.log(1);
+                },
+            );
+        }
     }
 
     private boundClinentInit(): void {
