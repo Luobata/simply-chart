@@ -10,6 +10,7 @@ import {
     IConfig,
 } from '@/lib/interface';
 import { addDebuggerData, hookInstall } from 'Lib/hook';
+import { throttle } from 'throttle-debounce';
 
 // import { addResizeListener } from 'Lib/resize.js';
 // tslint:disable-next-line
@@ -32,7 +33,7 @@ let id: number = 0;
 /**
  * default class
  */
-export default class Chart {
+export default abstract class Chart {
     public id: number;
     public name: string;
 
@@ -40,6 +41,8 @@ export default class Chart {
     protected canvas: HTMLCanvasElement;
     protected ctx: CanvasRenderingContext2D;
     protected animation: boolean = false;
+    // 停止动画 用来控制动画中途变化
+    protected stopAnimation: boolean = false;
     protected pixelRatio: number;
     protected config: IConfig;
 
@@ -53,6 +56,8 @@ export default class Chart {
 
         this.start();
     }
+
+    public abstract reRender(): void;
 
     protected insert(): void {
         this.dom.appendChild(this.canvas);
@@ -87,12 +92,23 @@ export default class Chart {
 
     private resizeEvent(): void {
         if (this.config.forceFit) {
+            // TODO 这里有个逻辑，第一次一定会先触发一次，是不是先hack掉 第二次再触发
+            let isFirst: boolean = true;
             resizeEvent.addResizeListener(
                 this.dom,
-                (): void => {
-                    // TODO re-render
-                    // console.log(1);
-                },
+                throttle(
+                    500,
+                    (): void => {
+                        if (isFirst) {
+                            isFirst = false;
+
+                            return;
+                        }
+                        this.reRender();
+                        //  TODO re-render
+                        console.log(1);
+                    },
+                ),
             );
         }
     }

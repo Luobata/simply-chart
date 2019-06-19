@@ -32,6 +32,10 @@ export default class Radius extends Chart {
         );
     }
 
+    public reRender(): void {
+        // TODO
+    }
+
     public update(data: number): Radius {
         this.data = data;
         this.ankle = (data / 100) * Math.PI * 2;

@@ -41,6 +41,10 @@ export default class Pie extends Chart {
         });
     }
 
+    public reRender(): void {
+        // TODO
+    }
+
     public update(data: number[]): Pie {
         this.data = data;
         this.renderData = [];

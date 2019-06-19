@@ -47,6 +47,19 @@ export default class Line extends Chart {
         });
     }
 
+    public reRender(): void {
+        // TODO
+        this.stopRender();
+    }
+
+    public stopRender(): void {
+        this.renderAttr = {
+            frameList: [],
+            lengthList: [],
+        };
+        this.stopAnimation = true;
+    }
+
     public point(): Line {
         this.config.point = true;
 
@@ -121,6 +134,7 @@ export default class Line extends Chart {
     }
 
     public render(): Line {
+        this.stopAnimation = false;
         if (this.config.renderType === enumRenderType.none) {
             this.renderNoAnimation();
         } else if (this.config.renderType === enumRenderType.point) {
@@ -204,6 +218,11 @@ export default class Line extends Chart {
 
     private frameRender(obj: IRender): void {
         requestAnimationFrame(() => {
+            if (this.stopAnimation) {
+                this.stopAnimation = false;
+
+                return;
+            }
             if (!obj.frameList.length) {
                 return;
             }

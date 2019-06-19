@@ -38,6 +38,10 @@ export default class Bar extends Chart {
         });
     }
 
+    public reRender(): void {
+        // TODO
+    }
+
     public update(data: number[]): Bar {
         this.data = data;
 
