@@ -30,6 +30,7 @@ window.onload = () => {
         base: {
             ...basicConifg,
             forceFit: true,
+            rederTime: 0.01,
             dom: document.getElementById('test13'),
             renderType: 'point',
         },

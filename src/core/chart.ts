@@ -10,7 +10,7 @@ import {
     IConfig,
 } from '@/lib/interface';
 import { addDebuggerData, hookInstall } from 'Lib/hook';
-import { throttle } from 'throttle-debounce';
+import { delay } from 'Lib/util';
 
 // import { addResizeListener } from 'Lib/resize.js';
 // tslint:disable-next-line
@@ -96,7 +96,7 @@ export default abstract class Chart {
             let isFirst: boolean = true;
             resizeEvent.addResizeListener(
                 this.dom,
-                throttle(
+                delay(
                     500,
                     (): void => {
                         if (isFirst) {
@@ -104,12 +104,24 @@ export default abstract class Chart {
 
                             return;
                         }
+                        this.boundClinentInit();
+                        this.setCanvas();
                         this.reRender();
                         //  TODO re-render
                         console.log(1);
                     },
                 ),
             );
+            // window.addEventListener(
+            //     'resize',
+            //     throttle(
+            //         2000,
+            //         (): void => {
+            //             console.log(2);
+            //             this.reRender();
+            //         },
+            //     ),
+            // );
         }
     }
 
@@ -138,6 +150,10 @@ export default abstract class Chart {
         this.ctx = this.canvas.getContext('2d');
         this.pixelRatio = window.devicePixelRatio;
 
+        this.setCanvas();
+    }
+
+    private setCanvas(): void {
         this.canvas.width = this.config.width * this.pixelRatio;
         this.canvas.height = this.config.height * this.pixelRatio;
 

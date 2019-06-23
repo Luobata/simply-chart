@@ -49,7 +49,20 @@ export default class Line extends Chart {
 
     public reRender(): void {
         // TODO
+        let isReRenderAnimation: boolean = true;
+        if (this.renderAttr.frameList.length) {
+            this.reset();
+            isReRenderAnimation = false;
+        }
         this.stopRender();
+
+        if (isReRenderAnimation) {
+            // 说明已经绘制完了 那就增量变化
+            console.log(this.pointList);
+            // debugger;
+            this.update(this.data);
+            this.render();
+        }
     }
 
     public stopRender(): void {
