@@ -4,7 +4,8 @@
 
 export const delay: Function = (timeTicket: number, fn: Function): Function => {
     // let start!: number;
-    let timer: NodeJS.Timer;
+    // let timer: NodeJS.Timer;
+    let timer: number;
 
     return (): void => {
         // const now: number = new Date().getTime();

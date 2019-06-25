@@ -380,19 +380,46 @@ export default class Line extends Chart {
             if (!obj.length) {
                 return;
             }
-            const pList: IPoint[] = obj.shift();
+            // const pList: IPoint[] = obj.shift();
+            const p: IPoint[] = obj.shift();
+            let pList!: IPoint[];
 
             this.reset();
             this.axiesChange();
             this.ctx.save();
             this.ctx.beginPath();
 
+            if (this.config.smooth) {
+                // catmull-rom geomatric is smooth but becauese the chage of the last point
+                // the line will change with time
+                if (this.smoothType === smoothType.catumulRom) {
+                    const pL: IPoint[] = catmullRom(p, 100);
+                    pList = pL;
+                } else if (this.smoothType === smoothType.bezierSmooth) {
+                    const pL: IPoint[][] = bezierSmooth(p);
+                    this.ctx.moveTo(p[0].x, p[0].y);
+                    for (const i of pL) {
+                        this.ctx.bezierCurveTo(
+                            i[1].x,
+                            i[1].y,
+                            i[2].x,
+                            i[2].y,
+                            i[3].x,
+                            i[3].y,
+                        );
+                    }
+                    // pList = pL;
+                }
+            } else {
+                pList = p;
+            }
+
             this.renderFill(pList);
             this.renderStrike(pList);
 
             this.ctx.closePath();
             this.ctx.restore();
-            for (const i of pList) {
+            for (const i of p) {
                 this.renderPoint(i);
             }
             if (obj.length) {

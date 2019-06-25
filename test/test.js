@@ -39,6 +39,20 @@ window.onload = () => {
             shadowColor: '#3370F8',
         },
     });
+    const a3 = new Chart.line({
+        base: {
+            ...basicConifg,
+            forceFit: true,
+            rederTime: 0.01,
+            smooth: true,
+            dom: document.getElementById('test14'),
+            renderType: 'point',
+        },
+        attr: {
+            ...attrConifg,
+            shadowColor: '#3370F8',
+        },
+    });
     const b = new Chart.line({
         base: {
             ...basicConifg,
@@ -161,6 +175,10 @@ window.onload = () => {
     k.update([2, 1, 3, 2.5, 1.5]).render();
     l.update([2, 1, 3, 2.5, 1.5]).render();
     a2.update([1, 2.5, 3, 2.5, 1])
+        .point()
+        .render();
+    // a3.update([4, 2, 1, 2, 1])
+    a3.update([1, 2.5, 3, 2.5, 1])
         .point()
         .render();
 
