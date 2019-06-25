@@ -10,6 +10,7 @@ import {
     ILineConfig,
     IPoint,
     IRender,
+    IPointList,
 } from '@/lib/interface';
 import Animation from 'canvas-bezier-curve';
 import bezierSmooth from 'Lib/geometric/bezier-smooth';
@@ -18,6 +19,13 @@ import catmullRom from 'Lib/geometric/catmull-rom';
 enum smoothType {
     catumulRom = 'catumulRom',
     bezierSmooth = 'bezierSmooth',
+}
+
+interface IPositionAttr {
+    marginX: number;
+    minY: number;
+    maxY: number;
+    rateY: number;
 }
 
 /**
@@ -32,6 +40,9 @@ export default class Line extends Chart {
         lengthList: [],
         frameList: [],
     };
+
+    // 用来暂存update之后的内容，resize的时候参考
+    private positionAttr: IPositionAttr;
 
     private smoothType: smoothType = smoothType.catumulRom;
 
@@ -60,8 +71,9 @@ export default class Line extends Chart {
             // 说明已经绘制完了 那就增量变化
             console.log(this.pointList);
             // debugger;
-            this.update(this.data);
-            this.render();
+            this.resizeUpdate();
+            // this.update(this.data);
+            // this.render();
         }
     }
 
@@ -101,6 +113,12 @@ export default class Line extends Chart {
         const minY: number = Math.min(...this.data);
         const rateY: number =
             maxY !== minY ? this.config.innerHeight / (maxY - minY) : 1;
+        this.positionAttr = {
+            marginX,
+            maxY,
+            minY,
+            rateY,
+        };
         const pointList: IPoint[] = [];
         const lengthList: number[] = [];
         let frameList: number[] = [];
@@ -144,6 +162,47 @@ export default class Line extends Chart {
         this.pointList = pointList;
 
         return this;
+    }
+
+    // 用来在resize的时候触发的更新
+    public resizeUpdate(): void {
+        // 长度为1 默认打开point
+        if (this.data.length === 1) {
+            this.point();
+            this.fill();
+        }
+
+        const marginX: number =
+            this.data.length !== 1
+                ? this.config.innerWidth / (this.data.length - 1)
+                : this.config.innerWidth / 2;
+
+        const marginXList: number[] = new Animation(
+            this.positionAttr.marginX,
+            marginX,
+            this.config.renderTime / 10,
+            this.config.renderCurve,
+        ).getList(this.config.framePerSecond);
+
+        const pointListFrameList: IPoint[][] = [];
+
+        for (const j of marginXList) {
+            const pointList: IPoint[] = [];
+            for (let i: number = 0; i < this.data.length; i = i + 1) {
+                const p: IPoint = {
+                    x: i * j * this.pixelRatio,
+                    y:
+                        (this.data[i] - this.positionAttr.minY) *
+                        this.positionAttr.rateY *
+                        this.pixelRatio,
+                };
+                pointList.push(p);
+            }
+            pointListFrameList.push(pointList);
+        }
+
+        this.stopAnimation = false;
+        this.renderResize(pointListFrameList);
     }
 
     public render(): Line {
@@ -307,6 +366,37 @@ export default class Line extends Chart {
         }
         this.ctx.closePath();
         this.ctx.restore();
+    }
+
+    private renderResize(obj: IPoint[][]): void {
+        requestAnimationFrame(() => {
+            if (this.stopAnimation) {
+                this.stopAnimation = false;
+
+                return;
+            }
+            if (!obj.length) {
+                return;
+            }
+            const pList: IPoint[] = obj.shift();
+
+            this.reset();
+            this.axiesChange();
+            this.ctx.save();
+            this.ctx.beginPath();
+
+            this.renderFill(pList);
+            this.renderStrike(pList);
+
+            this.ctx.closePath();
+            this.ctx.restore();
+            for (const i of pList) {
+                this.renderPoint(i);
+            }
+            if (obj.length) {
+                this.renderResize(obj);
+            }
+        });
     }
 
     private getPointByFrame(len: number, list: number[]): IPoint[] {
