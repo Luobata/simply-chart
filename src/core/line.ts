@@ -200,6 +200,8 @@ export default class Line extends Chart {
             }
             pointListFrameList.push(pointList);
         }
+        this.pointList = pointListFrameList[pointListFrameList.length - 1];
+        this.positionAttr.marginX = marginX;
 
         this.stopAnimation = false;
         this.renderResize(pointListFrameList);
