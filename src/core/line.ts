@@ -10,7 +10,6 @@ import {
     ILineConfig,
     IPoint,
     IRender,
-    IPointList,
 } from '@/lib/interface';
 import Animation from 'canvas-bezier-curve';
 import bezierSmooth from 'Lib/geometric/bezier-smooth';
@@ -56,6 +55,10 @@ export default class Line extends Chart {
             smooth: false,
             shadowColor: '',
         });
+    }
+
+    public renderToolTip(): void {
+        // TODO
     }
 
     public reRender(): void {
@@ -381,6 +384,7 @@ export default class Line extends Chart {
                 return;
             }
             // const pList: IPoint[] = obj.shift();
+            // 因为是完整的平移 所以不需要根据lengthList来获取点，一定都是所有的点
             const p: IPoint[] = obj.shift();
             let pList!: IPoint[];
 

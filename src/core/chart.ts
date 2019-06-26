@@ -59,6 +59,9 @@ export default abstract class Chart {
 
     public abstract reRender(): void;
 
+    // 绘制toolTip相关函数
+    public abstract renderToolTip(): void;
+
     protected insert(): void {
         this.dom.appendChild(this.canvas);
     }

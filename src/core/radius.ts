@@ -32,6 +32,10 @@ export default class Radius extends Chart {
         );
     }
 
+    public renderToolTip(): void {
+        // TODO
+    }
+
     public reRender(): void {
         // TODO
     }
