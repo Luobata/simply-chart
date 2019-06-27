@@ -2,6 +2,7 @@
  * @desc Chart
  */
 // import IResize from '@/@types/resize';
+import tooltip from '@/components/tooltip';
 import {
     enumRenderType,
     IBase,
@@ -26,6 +27,8 @@ const baseDefault: IBaseConfig = {
     renderTime: 2,
     renderCurve: 'ease-in-out',
     framePerSecond: 60,
+    // 辅助内容 包括 tooltip和可能有的disable
+    tooltip: true,
 };
 
 let id: number = 0;
@@ -37,6 +40,7 @@ export default abstract class Chart {
     public id: number;
     public name: string;
 
+    protected tooltip: tooltip;
     protected dom: HTMLElement;
     protected canvas: HTMLCanvasElement;
     protected ctx: CanvasRenderingContext2D;
@@ -86,6 +90,7 @@ export default abstract class Chart {
         this.canvasInit();
         this.animation = this.config.renderType !== enumRenderType.none;
         this.insert();
+        this.tooltipInit();
 
         this.getName();
         hookInstall();
@@ -168,5 +173,14 @@ export default abstract class Chart {
         this.id = id;
         id = id + 1;
         this.name = `${this.constructor.name}_${this.id}`;
+    }
+
+    // 初始化tooltip
+    private tooltipInit(): void {
+        if (!this.config.tooltip) {
+            return;
+        }
+
+        this.tooltip = new tooltip(this.dom);
     }
 }

@@ -21,6 +21,7 @@ export interface IBaseConfig {
     renderTime?: number;
     renderCurve?: string;
     framePerSecond?: number;
+    tooltip: boolean;
 }
 
 type ChartConf<T> = {
