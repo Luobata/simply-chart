@@ -9,6 +9,7 @@ import {
     IBaseConfig,
     IConf,
     IConfig,
+    IPoint,
 } from '@/lib/interface';
 import { addDebuggerData, hookInstall } from 'Lib/hook';
 import { delay } from 'Lib/util';
@@ -50,6 +51,11 @@ export default abstract class Chart {
     protected pixelRatio: number;
     protected config: IConfig;
 
+    // eventCache用于在canvas实例化绑定之前存储事件
+    private eventCache: IeventHandler[] = [];
+    // eventList用于存储所有绑定的事件
+    private eventList: IeventHandler[] = [];
+
     constructor(config: IConf, defaultConf: IBase) {
         this.config = {
             ...baseDefault,
@@ -62,6 +68,8 @@ export default abstract class Chart {
     }
 
     public abstract reRender(): void;
+
+    public abstract onChart(p: IPoint): boolean;
 
     // 绘制toolTip相关函数
     public abstract renderToolTip(): void;

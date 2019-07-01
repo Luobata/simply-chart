@@ -36,6 +36,8 @@ export default class ToolTip {
             `position: absolute;
             left: ${this.position.x};
             top: ${this.position.y};
+            width: ${this.width};
+            height: ${this.height};
             visibility: hidden;
             `,
         );
