@@ -38,6 +38,14 @@ export default class Bar extends Chart {
         });
     }
 
+    public eventBind(): void {
+        // TODO
+    }
+
+    public eventOff(): void {
+        // TODO
+    }
+
     public onChart(): boolean {
         return true;
     }

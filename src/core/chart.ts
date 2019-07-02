@@ -3,6 +3,8 @@
  */
 // import IResize from '@/@types/resize';
 import tooltip from '@/components/tooltip';
+import EventCenter from '@/event/event-center';
+import MouseEvent from '@/event/mouse';
 import { IeventHandler } from '@/interface/event';
 import {
     enumRenderType,
@@ -39,6 +41,8 @@ let id: number = 0;
  * default class
  */
 export default abstract class Chart {
+    public mouseEvent: MouseEvent;
+
     public id: number;
     public name: string;
 
@@ -51,6 +55,7 @@ export default abstract class Chart {
     protected stopAnimation: boolean = false;
     protected pixelRatio: number;
     protected config: IConfig;
+
 
     // eventCache用于在canvas实例化绑定之前存储事件
     private eventCache: IeventHandler[] = [];
@@ -69,6 +74,9 @@ export default abstract class Chart {
     }
 
     public abstract reRender(): void;
+
+    public abstract eventBind(): void;
+    public abstract eventOff(): void;
 
     public abstract onChart(p: IPoint): boolean;
 
@@ -97,6 +105,7 @@ export default abstract class Chart {
         this.boundClinentInit();
         // this.config = new Config(config);
         this.canvasInit();
+        this.eventInit();
         this.animation = this.config.renderType !== enumRenderType.none;
         this.insert();
         this.tooltipInit();
@@ -105,6 +114,10 @@ export default abstract class Chart {
         hookInstall();
         addDebuggerData(this);
         this.resizeEvent();
+    }
+
+    private eventInit(): void {
+        this.mouseEvent = new MouseEvent(this, new EventCenter(this.canvas));
     }
 
     private resizeEvent(): void {
@@ -125,20 +138,9 @@ export default abstract class Chart {
                         this.setCanvas();
                         this.reRender();
                         //  TODO re-render
-                        console.log(1);
                     },
                 ),
             );
-            // window.addEventListener(
-            //     'resize',
-            //     throttle(
-            //         2000,
-            //         (): void => {
-            //             console.log(2);
-            //             this.reRender();
-            //         },
-            //     ),
-            // );
         }
     }
 

@@ -57,6 +57,17 @@ export default class Line extends Chart {
         });
     }
 
+    public eventBind(): void {
+        // 所需要的事件绑定 只在绘制动画完成之后绑定，过程中不进行重复绑定
+        this.mouseEvent.on('mouse-move', (): void => {
+            // 判断是否出tooltip
+        });
+    }
+
+    public eventOff(): void {
+        // TODO
+    }
+
     public onChart(): boolean {
         return true;
     }
@@ -76,8 +87,6 @@ export default class Line extends Chart {
 
         if (isReRenderAnimation) {
             // 说明已经绘制完了 那就增量变化
-            console.log(this.pointList);
-            // debugger;
             this.resizeUpdate();
             // this.update(this.data);
             // this.render();

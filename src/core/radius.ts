@@ -32,6 +32,14 @@ export default class Radius extends Chart {
         );
     }
 
+    public eventBind(): void {
+        // TODO
+    }
+
+    public eventOff(): void {
+        // TODO
+    }
+
     public onChart(): boolean {
         return true;
     }
