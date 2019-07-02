@@ -99,7 +99,7 @@ export default class EventCenter {
         // TODO 是否需要拆开绑定
         mouseTypeArr.map(
             (v: string): void => {
-                this.canvas.dom.addEventListener(
+                this.canvas.addEventListener(
                     v,
                     (me: MouseEvent): void => {
                         if (

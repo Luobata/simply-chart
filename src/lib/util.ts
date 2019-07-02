@@ -11,12 +11,12 @@ export const delay: Function = (timeTicket: number, fn: Function): Function => {
         // const now: number = new Date().getTime();
         if (!timer) {
             // start = new Date().getTime();
-            timer = setTimeout(() => {
+            timer = window.setTimeout(() => {
                 fn();
             }, timeTicket);
         } else {
             clearTimeout(timer);
-            timer = setTimeout((): void => {
+            timer = window.setTimeout((): void => {
                 fn();
                 clearTimeout(timer);
                 timer = null;

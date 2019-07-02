@@ -3,6 +3,7 @@
  */
 // import IResize from '@/@types/resize';
 import tooltip from '@/components/tooltip';
+import { IeventHandler } from '@/interface/event';
 import {
     enumRenderType,
     IBase,

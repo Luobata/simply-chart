@@ -44,7 +44,7 @@ export default class ToolTip {
     }
 
     private appendDom(): void {
-        this.container.append(this.dom);
+        this.container.appendChild(this.dom);
     }
 
     // 销毁dom 可能有的事件绑定

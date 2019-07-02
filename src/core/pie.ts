@@ -41,6 +41,10 @@ export default class Pie extends Chart {
         });
     }
 
+    public onChart(): boolean {
+        return true;
+    }
+
     public renderToolTip(): void {
         // TODO
     }

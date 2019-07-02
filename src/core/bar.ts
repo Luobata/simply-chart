@@ -38,6 +38,10 @@ export default class Bar extends Chart {
         });
     }
 
+    public onChart(): boolean {
+        return true;
+    }
+
     public renderToolTip(): void {
         // TODO
     }
