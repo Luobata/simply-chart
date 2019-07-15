@@ -114,6 +114,8 @@ export default abstract class Chart {
         hookInstall();
         addDebuggerData(this);
         this.resizeEvent();
+
+        this.eventBind();
     }
 
     private eventInit(): void {

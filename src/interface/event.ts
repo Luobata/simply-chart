@@ -37,7 +37,7 @@ export const mouseTypeArr = makeArray(
     'mouse-down',
     'mouse-enter',
     'mouse-leave',
-    'mouse-move',
+    'mousemove',
     'mouse-out',
     'mouse-over',
     'mouse-in',
