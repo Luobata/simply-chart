@@ -58,23 +58,37 @@ export default class Line extends Chart {
     }
 
     public eventBind(): void {
+        // TODO
     }
 
     public eventOff(): void {
         // TODO
     }
 
+    // 判断一个点是否在图形上
+    // 如果没有面积， 只有线的 只判断在线上（或周围）
+    // 如果有面积的， 判断在线到 y = 0中间 （后续还可能出辅助线）
+    // 第一版 只判断在线上
+    // 判断在线上氛围两种 直线 和曲线 通过this.config.isSmooth来判断
     public onChart(p: IPoint): boolean {
+        if (this.config.smooth) {
+            // 判断点在一个贝塞尔曲线上
+        } else {
+            // 判断点在一个折线段上
+        }
+
+
         return true;
     }
 
     public renderToolTip(p: IPoint): void {
         // TODO
+        console.log('render tooltip')
     }
 
     public reRender(): void {
-        // TODO
         let isReRenderAnimation: boolean = true;
+        // 如果绘制到一半的 先清空
         if (this.renderAttr.frameList.length) {
             this.reset();
             isReRenderAnimation = false;
@@ -84,8 +98,6 @@ export default class Line extends Chart {
         if (isReRenderAnimation) {
             // 说明已经绘制完了 那就增量变化
             this.resizeUpdate();
-            // this.update(this.data);
-            // this.render();
         }
     }
 
@@ -97,12 +109,14 @@ export default class Line extends Chart {
         this.stopAnimation = true;
     }
 
+    // 配置point参数
     public point(): Line {
         this.config.point = true;
 
         return this;
     }
 
+    // 配置fill参数
     public fill(): Line {
         this.config.pointFill = true;
 
