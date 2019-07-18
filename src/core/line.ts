@@ -14,7 +14,6 @@ import {
 import Animation from 'canvas-bezier-curve';
 import bezierSmooth from 'Lib/geometric/bezier-smooth';
 import catmullRom from 'Lib/geometric/catmull-rom';
-import { throttle } from 'throttle-debounce'
 
 enum smoothType {
     catumulRom = 'catumulRom',
@@ -59,25 +58,17 @@ export default class Line extends Chart {
     }
 
     public eventBind(): void {
-        // 所需要的事件绑定 只在绘制动画完成之后绑定，过程中不进行重复绑定
-        // 暂时只在有tooltip的时候绑定 后续这里条件可能要修改 变成if (mousemove) 然后tooltip变成mousemove的一个条件
-        if (this.config.tooltip) {
-            this.mouseEvent.on('mousemove', throttle(1000, (): void => {
-                console.log(1)
-                // 判断是否出tooltip
-            }));
-        }
     }
 
     public eventOff(): void {
         // TODO
     }
 
-    public onChart(): boolean {
+    public onChart(p: IPoint): boolean {
         return true;
     }
 
-    public renderToolTip(): void {
+    public renderToolTip(p: IPoint): void {
         // TODO
     }
 

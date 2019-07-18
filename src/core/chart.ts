@@ -4,7 +4,7 @@
 // import IResize from '@/@types/resize';
 import tooltip from '@/components/tooltip';
 import EventCenter from '@/event/event-center';
-import MouseEvent from '@/event/mouse';
+import Mouse from '@/event/mouse';
 import { IeventHandler } from '@/interface/event';
 import {
     enumRenderType,
@@ -16,6 +16,7 @@ import {
 } from '@/lib/interface';
 import { addDebuggerData, hookInstall } from 'Lib/hook';
 import { delay } from 'Lib/util';
+import { throttle } from 'throttle-debounce';
 
 // import { addResizeListener } from 'Lib/resize.js';
 // tslint:disable-next-line
@@ -32,7 +33,7 @@ const baseDefault: IBaseConfig = {
     renderCurve: 'ease-in-out',
     framePerSecond: 60,
     // 辅助内容 包括 tooltip和可能有的disable
-    tooltip: true,
+    tooltip: false,
 };
 
 let id: number = 0;
@@ -41,7 +42,7 @@ let id: number = 0;
  * default class
  */
 export default abstract class Chart {
-    public mouseEvent: MouseEvent;
+    public mouseEvent: Mouse;
 
     public id: number;
     public name: string;
@@ -81,7 +82,22 @@ export default abstract class Chart {
     public abstract onChart(p: IPoint): boolean;
 
     // 绘制toolTip相关函数
-    public abstract renderToolTip(): void;
+    public abstract renderToolTip(p: IPoint): void;
+
+    // 绑定公共事件 比如出现tooltip
+    public commonEventBind(): void {
+        // 所需要的事件绑定 只在绘制动画完成之后绑定，过程中不进行重复绑定
+        // 暂时只在有tooltip的时候绑定 后续这里条件可能要修改 变成if (mousemove) 然后tooltip变成mousemove的一个条件
+        if (this.config.tooltip) {
+            this.mouseEvent.on('mousemove', throttle(1000, (e: MouseEvent): void => {
+                const point: IPoint = { x: e.layerX, y: e.layerY };
+                if (this.onChart(point)) {
+                    this.renderToolTip(point);
+                }
+                // 判断是否出tooltip
+            }));
+        }
+    }
 
     protected insert(): void {
         this.dom.appendChild(this.canvas);
@@ -115,11 +131,12 @@ export default abstract class Chart {
         addDebuggerData(this);
         this.resizeEvent();
 
+        this.commonEventBind();
         this.eventBind();
     }
 
     private eventInit(): void {
-        this.mouseEvent = new MouseEvent(this, new EventCenter(this.canvas));
+        this.mouseEvent = new Mouse(this, new EventCenter(this.canvas));
     }
 
     private resizeEvent(): void {

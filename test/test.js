@@ -47,6 +47,7 @@ window.onload = () => {
             smooth: true,
             dom: document.getElementById('test14'),
             renderType: 'point',
+            tooltip: true,
         },
         attr: {
             ...attrConifg,
